@@ -139,9 +139,13 @@ and unzip it. </p>
 
 <h1 id="ios-integration">iOS Integration</h1>
 
-<p>Our iOS libraries let you easily collect your customers/items tag information. </p>
+<p>Our iOS libraries let you easily collect your customers/items tag information in your iOS app. </p>
 
 <h2 id="configure-project-settings">Configure Project Settings</h2>
+
+<aside class="notice">
+Steps 6 and 7 are for Swift developers only. The rest are for everybody! :)
+</aside>
 
 <ol>
 <li><p>Drag+drop the &ldquo;iOS&rdquo; folder on project in Xcode navigator.
@@ -158,25 +162,15 @@ In Targets -&gt; YourAppTarget -&gt; Build Settings
 -&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</p></li>
 <li><p>In Targets -&gt; YourAppTarget -&gt; General
 -&gt; Link Binary with Libraries, add MediaPlayer.Framework</p></li>
-</ol>
-
-<blockquote>
-<p>For Swift developers, continue with the following steps </p>
-</blockquote>
-
-<ol>
-<li><p>Add a bridge header file: File -&gt; New &gt; File&hellip; &gt; Header File
+<li><p>For Swift Developers, add a bridge header file: File -&gt; New &gt; File&hellip; &gt; Header File
 and name it ViewController-Bridging-Header.h</p></li>
-<li><p>In Targets -&gt; YourAppTarget -&gt; Build Options
+<li><p>For Swift Developers, in Targets -&gt; YourAppTarget -&gt; Build Options
 -&gt; Swift Compiler - General -&gt; Objective-C Bridging Header,
 add ViewController-Bridging-Header.h</p></li>
 </ol>
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
-<pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>
-<span class="c1">// in YourViewController.h, add
-</span>
-<span class="cp">#import "FmSessionManager.h"
+<pre class="highlight objective_c"><code><span class="cp">#import "FmSessionManager.h"
 </span>
 <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
   <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">readerManager</span><span class="p">;</span>
@@ -241,7 +235,45 @@ add ViewController-Bridging-Header.h</p></li>
   <span class="p">}</span>
 
 </code></pre>
-<p>To begin receiving notifications from your reader, you must first configure your settings and initialize the SDK.</p>
+<p>You must first configure your settings and initialize the SDK. Add the code from on the right to your app to create the readers. </p>
+
+<p>Here is a description for each configuration item, some items are not relevant for some readers.</p>
+
+<table><thead>
+<tr>
+<th>Configuration item</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>selectedDeviceType</td>
+<td>Choose your device type, you may only use one device type at a time.</td>
+</tr>
+<tr>
+<td>specificDeviceId</td>
+<td>Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when &lsquo;Allow Multiconnect&rsquo; = @0.</td>
+</tr>
+<tr>
+<td>Scan Sound</td>
+<td>Hear notifications from Flojack MSR.</td>
+</tr>
+<tr>
+<td>Scan Period</td>
+<td>Period of polling for Audiojack readers.</td>
+</tr>
+<tr>
+<td>Power Operation</td>
+<td>Determine power operation for FloBle Plus. The affects how startReader and stopReader control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.</td>
+</tr>
+<tr>
+<td>Transmit Power</td>
+<td>Control the power of the NFC polling on the FloBle Plus.</td>
+</tr>
+<tr>
+<td>Allow Multiconnect</td>
+<td>Control whether multiple FloBle devices can connect simultaneously</td>
+</tr>
+</tbody></table>
 
 <h2 id="listen-for-reader-events">Listen for Reader Events</h2>
 <pre class="highlight objective_c"><code>
@@ -341,7 +373,7 @@ add ViewController-Bridging-Header.h</p></li>
 </code></pre>
 <p>Add callbacks/delegates to receive scan events and reader status changes. </p>
 
-<h3 id="callbacks-delegates">Callbacks / Delegates</h3>
+<h3 id="delegates">Delegates</h3>
 
 <p>Here is a quick summary of the notifications your app will receive from the Flomio SDK. </p>
 
@@ -363,9 +395,7 @@ add ViewController-Bridging-Header.h</p></li>
 
 <p>to be continued&hellip;</p>
 
-<h1 id="ios-integration">iOS Integration</h1>
-
-<p>The Flomio iOS SDK makes it easy to build a disney experience in your iOS app. </p>
+<h1 id="android-integration">Android Integration</h1>
 
 <h1 id="common-questions">Common Questions</h1>
 
@@ -383,7 +413,7 @@ add ViewController-Bridging-Header.h</p></li>
 
 <h1 id="get-help">Get Help</h1>
 
-<p>Please visit the forums for trho</p>
+<p>Please visit <a href="https://flomio.com/forums/forum/ask-the-flomies/">the forums</a> for help and to see previous questions.</p>
 
           <h1 id="errors">Errors</h1>
 

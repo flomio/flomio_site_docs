@@ -168,7 +168,9 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 </ol>
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
-<pre class="highlight objective_c"><code><span class="cp">#import "FmSessionManager.h"
+<pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>
+<span class="c1">// in YourViewController.h, add this to viewDidLoad
+</span><span class="cp">#import "FmSessionManager.h"
 </span>
 <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
   <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">readerManager</span><span class="p">;</span>

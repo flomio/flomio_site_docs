@@ -132,69 +132,46 @@ Welcome to Flomio! Get familiar with the Flomio products and explore their featu
 
 <p>Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and the tag.</p>
 
-<h2 id="download-the-sdk">Download the SDK</h2>
+<h2 id="download-the-libraries">Download the Libraries</h2>
 
 <p><a href="https://www.dropbox.com/s/v4yiasrq443ws5p/FlomioSDKv2.1_beta.zip?dl=1">Download the latest Flomio SDK</a>
-and unzip it.</p>
+and unzip it. </p>
+
+<h1 id="ios-integration">iOS Integration</h1>
+
+<p>Our iOS libraries let you easily collect your customers/items tag information. </p>
 
 <h2 id="configure-project-settings">Configure Project Settings</h2>
 
-<p>Follow the guide for your specific platform to configure the settings of your project -&gt;</p>
-<pre class="highlight objective_c"><code><span class="cm">/*
-1. Drag+drop the "iOS" folder on project in Xcode navigator.
-   Make sure the "Copy items if needed" option is selected 
-   and click "Create groups" and "Finish" in dialog.
+<ol>
+<li><p>Drag+drop the &ldquo;iOS&rdquo; folder on project in Xcode navigator.
+Make sure the &ldquo;Copy items if needed&rdquo; option is selected 
+and click &ldquo;Create groups&rdquo; and &ldquo;Finish&rdquo; in dialog.</p></li>
+<li><p>You must configure your application with the following settings.<br>
+Click the Project Navigator (on the left), then click the
+application name under TARGET
+In Targets -&gt; YourAppTarget -&gt; Build Settings 
+-&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’</p></li>
+<li><p>In Targets -&gt; YourAppTarget -&gt; Build Options 
+-&gt; Enable Bitcode set to ‘No’</p></li>
+<li><p>(optional) In Target -&gt; Build Settings
+-&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</p></li>
+<li><p>In Targets -&gt; YourAppTarget -&gt; General
+-&gt; Link Binary with Libraries, add MediaPlayer.Framework</p></li>
+</ol>
 
-2. You must configure your application with the following settings.  
-   Click the Project Navigator (on the left), then click the
-   application name under TARGET
-   In Targets -&gt; YourAppTarget -&gt; Build Settings 
-    -&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’
+<blockquote>
+<p>For Swift developers, continue with the following steps </p>
+</blockquote>
 
-3. In Targets -&gt; YourAppTarget -&gt; Build Options 
-    -&gt; Enable Bitcode set to ‘No’
+<ol>
+<li><p>Add a bridge header file: File -&gt; New &gt; File&hellip; &gt; Header File
+and name it ViewController-Bridging-Header.h</p></li>
+<li><p>In Targets -&gt; YourAppTarget -&gt; Build Options
+-&gt; Swift Compiler - General -&gt; Objective-C Bridging Header,
+add ViewController-Bridging-Header.h</p></li>
+</ol>
 
-4. (optional) In Target -&gt; Build Settings
-    -&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’
-
-5. In Targets -&gt; YourAppTarget -&gt; General
-    -&gt; Link Binary with Libraries, add MediaPlayer.Framework
-*/</span>  
-
-</code></pre><pre class="highlight swift"><code><span class="cm">/*
-1. Drag and drop the "iOS" folder on project in Xcode navigator.
-   Make sure the "Copy items if needed" option is selected 
-   and click "Create groups" and "Finish" in dialog.
-
-2. You must configure your application with the following settings.  
-   Click the Project Navigator (on the left), then click the
-   application name under TARGET
-   In Targets -&gt; YourAppTarget -&gt; Build Settings 
-    -&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’
-
-3. In Targets -&gt; YourAppTarget -&gt; Build Options 
-    -&gt; Enable Bitcode set to ‘No’
-
-4. (optional) In Target -&gt; Build Settings
-    -&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’
-
-5. In Targets -&gt; YourAppTarget -&gt; General
-    -&gt; Link Binary with Libraries, add MediaPlayer.Framework
-
-6. Add a bridge header file: File -&gt; New &gt; File... &gt; Header File
-    and name it ViewController-Bridging-Header.h
-
-7. In Targets -&gt; YourAppTarget -&gt; Build Options
-   -&gt; Swift Compiler - General -&gt; Objective-C Bridging Header,
-   add ViewController-Bridging-Header.h
-*/</span>
-
-<span class="o">------------------------------------------</span>
-<span class="c1">// in ViewController-Bridging-Header.h, add</span>
-<span class="cp">#import "FmSessionManager.h"</span>
-
-
-</code></pre>
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
 <pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>
 <span class="c1">// in YourViewController.h, add
@@ -232,6 +209,11 @@ and unzip it.</p>
 <span class="p">}</span>
 
 </code></pre><pre class="highlight swift"><code><span class="o">------------------------------------------</span>
+<span class="c1">// in ViewController-Bridging-Header.h, add</span>
+<span class="cp">#import "FmSessionManager.h"</span>
+
+
+<span class="o">------------------------------------------</span>
 <span class="c1">// in ViewController.swift, add</span>
 
 <span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
@@ -261,7 +243,7 @@ and unzip it.</p>
 </code></pre>
 <p>To begin receiving notifications from your reader, you must first configure your settings and initialize the SDK.</p>
 
-<h2 id="begin-listening-for-reader-events">Begin listening for reader events</h2>
+<h2 id="listen-for-reader-events">Listen for Reader Events</h2>
 <pre class="highlight objective_c"><code>
 <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">active</span> <span class="p">{</span>
   <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Activated"</span><span class="p">);</span>
@@ -379,11 +361,11 @@ and unzip it.</p>
 </tr>
 </tbody></table>
 
-<!-- <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside> &ndash;>
+<p>to be continued&hellip;</p>
 
-<!-- <aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside> &ndash;>
+<h1 id="ios-integration">iOS Integration</h1>
+
+<p>The Flomio iOS SDK makes it easy to build a disney experience in your iOS app. </p>
 
 <h1 id="common-questions">Common Questions</h1>
 

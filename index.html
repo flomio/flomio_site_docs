@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;objc&quot;,&quot;swift&quot;]">
+  <body class="index" data-languages="[&quot;objective_c&quot;,&quot;swift&quot;,&quot;java&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,8 +101,9 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="objc">objc</a>
+              <a href="#" data-language-name="objective_c">objective_c</a>
               <a href="#" data-language-name="swift">swift</a>
+              <a href="#" data-language-name="java">java</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -110,159 +111,272 @@
         <ul class="search-results"></ul>
       <div id="toc">
       </div>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Flomio developer portal! You can use the Flomio SDK with any Flomio NFC reader to add this superpower to your apps. </p>
+<p>Welcome to the Flomio developer portal! Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS, Android, and WindowsPhone.</p>
 
-<p>We have examples in Objective-C and Swift! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>You can use the Flomio SDK alongside any of Flomio&rsquo;s line of NFC, BLE, and UHF RFID readers. </p>
 
-<h1 id="authentication">Authentication</h1>
+<p>You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight objective_c"><code><span class="n">OBJECTEI</span> <span class="n">SEEE</span>
-</code></pre><pre class="highlight swift"><code><span class="kt">SWIFTGTGGGGFFFEE</span>
+<h1 id="getting-started">Getting Started</h1>
+
+<h2 id="download-the-sdk">Download the SDK</h2>
+
+<p><a href="https://www.dropbox.com/s/v4yiasrq443ws5p/FlomioSDKv2.1_beta.zip?dl=1">Download the latest Flomio SDK</a>
+and unzip it.</p>
+
+<h2 id="configure-project-settings">Configure Project Settings</h2>
+
+<p>Follow the guide for your specific platform to configure the settings of your project -&gt;</p>
+<pre class="highlight objective_c"><code><span class="cm">/*
+1. Drag+drop the "iOS" folder on project in Xcode navigator.
+   Make sure the "Copy items if needed" option is selected 
+   and click "Create groups" and "Finish" in dialog.
+
+2. You must configure your application with the following settings.  
+   Click the Project Navigator (on the left), then click the
+   application name under TARGET
+   In Targets -&gt; YourAppTarget -&gt; Build Settings 
+    -&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’
+
+3. In Targets -&gt; YourAppTarget -&gt; Build Options 
+    -&gt; Enable Bitcode set to ‘No’
+
+4. (optional) In Target -&gt; Build Settings
+    -&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’
+
+5. In Targets -&gt; YourAppTarget -&gt; General
+    -&gt; Link Binary with Libraries, add MediaPlayer.Framework
+*/</span>  
+
+</code></pre><pre class="highlight swift"><code><span class="cm">/*
+1. Drag and drop the "iOS" folder on project in Xcode navigator.
+   Make sure the "Copy items if needed" option is selected 
+   and click "Create groups" and "Finish" in dialog.
+
+2. You must configure your application with the following settings.  
+   Click the Project Navigator (on the left), then click the
+   application name under TARGET
+   In Targets -&gt; YourAppTarget -&gt; Build Settings 
+    -&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’
+
+3. In Targets -&gt; YourAppTarget -&gt; Build Options 
+    -&gt; Enable Bitcode set to ‘No’
+
+4. (optional) In Target -&gt; Build Settings
+    -&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’
+
+5. In Targets -&gt; YourAppTarget -&gt; General
+    -&gt; Link Binary with Libraries, add MediaPlayer.Framework
+
+6. Add a bridge header file: File -&gt; New &gt; File... &gt; Header File
+    and name it ViewController-Bridging-Header.h
+
+7. In Targets -&gt; YourAppTarget -&gt; Build Options
+   -&gt; Swift Compiler - General -&gt; Objective-C Bridging Header,
+   add ViewController-Bridging-Header.h
+*/</span>
+
+<span class="o">------------------------------------------</span>
+<span class="c1">// in ViewController-Bridging-Header.h, add</span>
+<span class="cp">#import "FmSessionManager.h"</span>
+
+
 </code></pre>
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
+<pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>
+<span class="c1">// in YourViewController.h, add
+</span>
+<span class="cp">#import "FmSessionManager.h"
+</span>
+<span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
+  <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">readerManager</span><span class="p">;</span>
+<span class="p">}</span>   
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<span class="k">@end</span>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<span class="o">------------------------------------------</span>
+<span class="c1">// in YourViewController.m, add this to viewDidLoad
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+  <span class="n">readerManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">FmSessionManager</span> <span class="nf">sharedManager</span><span class="p">];</span>
+  <span class="n">readerManager</span><span class="p">.</span><span class="n">selectedDeviceType</span> <span class="o">=</span> <span class="n">kFloBlePlus</span><span class="p">;</span> <span class="c1">// For FloBLE Plus
+</span>  <span class="c1">//kFlojackMsr, kFlojackBzr for audiojack readers
+</span>  <span class="n">readerManager</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+  <span class="n">readerManager</span><span class="p">.</span><span class="n">specificDeviceId</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span> 
+  <span class="c1">//@"RR330-000120" use device id from back of device to only connect to specific device
+</span>  <span class="c1">// only for use when "Allow Multiconnect" = @0
+</span>
+  <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">configurationDictionary</span> <span class="o">=</span> <span class="p">@{</span>
+    <span class="s">@"Scan Sound"</span> <span class="o">:</span> <span class="mi">@1</span><span class="p">,</span>
+    <span class="s">@"Scan Period"</span> <span class="o">:</span> <span class="mi">@1000</span><span class="p">,</span>
+    <span class="s">@"Reader State"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span><span class="n">kReadUuid</span><span class="p">],</span> <span class="c1">//kReadData for NDEF
+</span>    <span class="s">@"Power Operation"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span><span class="n">kAutoPollingControl</span><span class="p">],</span> <span class="c1">//kBluetoothConnectionControl low power usage
+</span>    <span class="s">@"Transmit Power"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span> <span class="n">kHighPower</span><span class="p">],</span>
+    <span class="s">@"Allow Multiconnect"</span> <span class="o">:</span> <span class="mi">@0</span><span class="p">,</span> <span class="c1">//control whether multiple FloBLE devices can connect
+</span>    <span class="p">};</span>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">setConfiguration</span><span class="p">:</span> <span class="n">configurationDictionary</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">createReaders</span><span class="p">];</span>
+<span class="p">}</span>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+</code></pre><pre class="highlight swift"><code><span class="o">------------------------------------------</span>
+<span class="c1">// in ViewController.swift, add</span>
 
-<h1 id="kittens">Kittens</h1>
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+  <span class="k">var</span> <span class="nv">device</span> <span class="p">:</span> <span class="kt">FmDevice</span><span class="p">?</span>
+  <span class="k">let</span> <span class="nv">readerManager</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+  <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
+      <span class="n">readerManager</span><span class="o">.</span><span class="n">selectedDeviceType</span> <span class="o">=</span> <span class="kt">DeviceType</span><span class="o">.</span><span class="n">floBlePlus</span>
+      <span class="c1">//flojackBzr, flojackMsr, flojackAny</span>
+      <span class="n">readerManager</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+      <span class="n">readerManager</span><span class="o">.</span><span class="n">specificDeviceId</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>
+      <span class="k">let</span> <span class="nv">configurationDictionary</span> <span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span>
+          <span class="p">[</span><span class="s">"Scan Sound"</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+           <span class="s">"Scan Period"</span> <span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+           <span class="s">"Reader State"</span> <span class="p">:</span> <span class="kt">ReaderStateType</span><span class="o">.</span><span class="n">readUuid</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="c1">//readData for NDEF</span>
+           <span class="s">"Power Operation"</span> <span class="p">:</span> <span class="kt">PowerOperation</span><span class="o">.</span><span class="n">autoPollingControl</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="c1">//bluetoothConnectionControl low power usage</span>
+           <span class="s">"Transmit Power"</span> <span class="p">:</span> <span class="kt">TransmitPower</span><span class="o">.</span><span class="n">highPower</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span>
+           <span class="s">"Allow Multiconnect"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">]</span>
 
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
+      <span class="n">readerManager</span><span class="o">.</span><span class="nf">setConfiguration</span><span class="p">(</span><span class="n">configurationDictionary</span><span class="p">)</span>
+      <span class="n">readerManager</span><span class="o">.</span><span class="nf">createReaders</span><span class="p">()</span>
+  <span class="p">}</span>
+
 </code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
+<p>To begin receiving notifications from your reader, you must first configure your settings and initialize the SDK.</p>
 
-<h3 id="http-request">HTTP Request</h3>
+<h2 id="begin-listening-for-reader-events">Begin listening for reader events</h2>
+<pre class="highlight objective_c"><code>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">active</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Activated"</span><span class="p">);</span>
+<span class="p">}</span>
 
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">inactive</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Inactive"</span><span class="p">);</span>
+<span class="p">}</span>
 
-<h3 id="query-parameters">Query Parameters</h3>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didFindTagWithUuid</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Uuid</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="n">withAtr</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Atr</span> <span class="n">withError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+        <span class="c1">//Use the main queue if the UI must be updated with the tag UUID or the deviceId
+</span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found tag UUID: %@ from device:%@"</span><span class="p">,</span><span class="n">Uuid</span><span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didFindTagWithData</span><span class="o">:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">payload</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="n">withAtr</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Atr</span> <span class="n">withError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+        <span class="c1">//Use the main queue if the UI must be updated with the tag data or the deviceId
+</span>        <span class="k">if</span> <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Raw Data"</span><span class="p">]){</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found raw data: %@ from device:%@"</span><span class="p">,</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Raw Data"</span><span class="p">]</span> <span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Ndef"</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found Ndef Message: %@ from device:%@"</span><span class="p">,</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Ndef"</span><span class="p">]</span> <span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didReceiveReaderError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span> <span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span> <span class="c1">// Second dispatch message to log tag and restore screen
+</span>       <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span> <span class="c1">//Reader error
+</span>    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didUpdateConnectedDevices</span><span class="o">:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">connectedDevices</span> <span class="p">{</span>
+    <span class="c1">//The list of connected devices was updated
+</span><span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didChangeCardStatus</span><span class="o">:</span><span class="p">(</span><span class="n">CardStatus</span><span class="p">)</span><span class="n">status</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="p">{</span>
+     <span class="c1">//The card status has entered or left the scan range of the reader
+</span>    <span class="c1">// Cardstatus:
+</span>    <span class="c1">// 0:kNotPresent
+</span>    <span class="c1">// 1:kPresent
+</span>    <span class="c1">// 2:kReadingData
+</span><span class="p">}</span>
+</code></pre><pre class="highlight swift"><code>
+<span class="kd">func</span> <span class="nf">inactive</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"App Inactive"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">active</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"App Activated"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="nf">didFindTag</span><span class="p">(</span><span class="n">withUuid</span> <span class="kt">Uuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withAtr</span> <span class="kt">Atr</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">thisUuid</span> <span class="o">=</span> <span class="kt">Uuid</span><span class="p">,</span> <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"Did find UUID: </span><span class="se">\(</span><span class="n">thisUuid</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">didFindTag</span><span class="p">(</span><span class="n">withData</span> <span class="nv">payload</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withAtr</span> <span class="kt">Atr</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">thisPayload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s">"Raw Data"</span><span class="p">]</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Did find payload: </span><span class="se">\(</span><span class="n">thisPayload</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">ndef</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s">"Ndef"</span><span class="p">]</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Did find payload: </span><span class="se">\(</span><span class="n">ndef</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">didUpdateConnectedDevices</span><span class="p">(</span><span class="n">_</span> <span class="nv">devices</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//The list of connected devices was updated</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">didChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">CardStatus</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">device</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+        <span class="c1">//The card status has entered or left the scan range of the reader</span>
+        <span class="c1">// Cardstatus:</span>
+        <span class="c1">// 0:CardStatus.notPresent</span>
+        <span class="c1">// 1:CardStatus.present</span>
+        <span class="c1">// 2:CardStatus.readingData</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">didReceiveReaderError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<p>Add callbacks/delegates to receive scan events and reader status changes. </p>
+
+<h3 id="callbacks-delegates">Callbacks / Delegates</h3>
+
+<p>Here is a quick summary of the notifications your app will receive from the Flomio SDK. </p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
+<th>Callback</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>didFindTagWithUuid(uuid) withAtr(atr)</td>
+<td>Tag has been detected by the reader while in Reader State:Read UUID mode</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>didFindTagWithData withAtr(atr)</td>
+<td>Tag has been detected by the reader while in Reader State:Read Data mode</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
+<!-- <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
-</aside>
+</aside> &ndash;>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
-</tr>
-</tbody></table>
+<!-- <aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside> &ndash;>
 
           <h1 id="errors">Errors</h1>
 
@@ -325,8 +439,9 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="objc">objc</a>
+                <a href="#" data-language-name="objective_c">objective_c</a>
                 <a href="#" data-language-name="swift">swift</a>
+                <a href="#" data-language-name="java">java</a>
           </div>
       </div>
     </div>

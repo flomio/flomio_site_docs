@@ -2,188 +2,283 @@
 title: API Reference
 
 language_tabs:
-  - shell
-  - ruby
-  - python
-  - javascript
+  - objective_c
+  - swift
+  - java
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - errors
 
 search: true
 ---
 
-# Introduction
+# Welcome
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to Flomio! Get familiar with the Flomio products and explore their features in the [Flomio Shop](https://flomio.com/shop/)
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+You can use the Flomio SDK alongside any of Flomio's line of NFC, BLE, and UHF RFID readers.
 
-# Authentication
+You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-> To authorize, use this code:
+# Getting Started
 
-```ruby
-require 'kittn'
+Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If you still need a helping hand after this, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and the tag.
 
-```python
-import kittn
+## Download the Libraries
 
-api = kittn.authorize('meowmeowmeow')
-```
+[Download the latest Flomio SDK](https://www.dropbox.com/s/v4yiasrq443ws5p/FlomioSDKv2.1_beta.zip?dl=1)
+and unzip it. 
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
+# iOS Integration
 
-```javascript
-const kittn = require('kittn');
+Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project.
 
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+## Configure Project Settings
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Steps 6 and 7 are for Swift developers only. The rest are for everybody! :)
 </aside>
 
-# Kittens
+1. Drag+drop the "iOS" folder on project in Xcode navigator.
+Make sure the "Copy items if needed" option is selected 
+and click "Create groups" and "Finish" in dialog.
 
-## Get All Kittens
+2. You must configure your application with the following settings.  
+Click the Project Navigator (on the left), then click the
+application name under TARGET. `In Targets -> YourAppTarget -> Build Settings 
+-> Linking -> Other Linker Flags add ‘-lc++’ and ’-ObjC’`
 
-```ruby
-require 'kittn'
+3. `In Targets -> YourAppTarget -> Build Options 
+-> Enable Bitcode set to ‘No’`
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+4. (optional) `In Target -> Build Settings
+-> Apple LLVM 7.0-Preprocessing -> Preprocessor Macros add ‘DEBUGLOG’`
+
+5. `In Targets -> YourAppTarget -> General
+-> Link Binary with Libraries, add MediaPlayer.Framework`
+
+6. For Swift Developers: Add a bridge header file: `File -> New > File... > Header File`
+and name it ViewController-Bridging-Header.h
+
+7. For Swift Developers: `In Targets -> YourAppTarget -> Build Options
+-> Swift Compiler - General -> Objective-C Bridging Header`,
+add `ViewController-Bridging-Header.h`
+
+## Initialize the Flomio SDK
+
+```objective_c
+------------------------------------------
+// in YourViewController.h, add this to viewDidLoad
+#import "FmSessionManager.h"
+
+@interface ViewController : UIViewController <FmSessionManagerDelegate> {  
+  FmSessionManager *readerManager;
+}   
+
+@end
+
+------------------------------------------
+// in YourViewController.m, add this to viewDidLoad
+- (void)viewDidLoad {
+  readerManager = [FmSessionManager sharedManager];
+  readerManager.selectedDeviceType = kFloBlePlus; // For FloBLE Plus
+  //kFlojackMsr, kFlojackBzr for audiojack readers
+  readerManager.delegate = self;
+  readerManager.specificDeviceId = nil; 
+  //@"RR330-000120" use device id from back of device to only connect to specific device
+  // only for use when "Allow Multiconnect" = @0
+
+  NSDictionary *configurationDictionary = @{
+    @"Scan Sound" : @1,
+    @"Scan Period" : @1000,
+    @"Reader State" : [NSNumber numberWithInt:kReadUuid], //kReadData for NDEF
+    @"Power Operation" : [NSNumber numberWithInt:kAutoPollingControl], //kBluetoothConnectionControl low power usage
+    @"Transmit Power" : [NSNumber numberWithInt: kHighPower],
+    @"Allow Multiconnect" : @0, //control whether multiple FloBLE devices can connect
+    };
+
+  [readerManager setConfiguration: configurationDictionary];
+  [readerManager createReaders];
+}
+
 ```
 
-```python
-import kittn
+```swift
+------------------------------------------
+// in ViewController-Bridging-Header.h, add
+#import "FmSessionManager.h"
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
 
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
+------------------------------------------
+// in ViewController.swift, add
 
-```javascript
-const kittn = require('kittn');
+class ViewController: UIViewController, FmSessionManagerDelegate {
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+  var device : FmDevice?
+  let readerManager : FmSessionManager = FmSessionManager()
+  
+  override func viewDidLoad() {
+      super.viewDidLoad()
+      
+      readerManager.selectedDeviceType = DeviceType.floBlePlus
+      //flojackBzr, flojackMsr, flojackAny
+      readerManager.delegate = self
+      readerManager.specificDeviceId = nil;
+      let configurationDictionary : [String : Any] =
+          ["Scan Sound" : 1,
+           "Scan Period" : 1000,
+           "Reader State" : ReaderStateType.readUuid.rawValue, //readData for NDEF
+           "Power Operation" : PowerOperation.autoPollingControl.rawValue, //bluetoothConnectionControl low power usage
+           "Transmit Power" : TransmitPower.highPower.rawValue,
+           "Allow Multiconnect" : false]
+      
+      readerManager.setConfiguration(configurationDictionary)
+      readerManager.createReaders()
   }
-]
+
 ```
+You must first configure your settings and initialize the SDK. Add the code from your language of choice (on the right) to your app to create the readers. 
 
-This endpoint retrieves all kittens.
+Here is a description for each configuration item, some items are not relevant for some readers.
 
-### HTTP Request
+Configuration item | Description
+--------- | -------
+selectedDeviceType | Choose your device type, you may only use one device type at a time.
+specificDeviceId | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
+Scan Sound | Hear notifications from Flojack MSR.
+Scan Period | Period of polling for Audiojack readers.
+Power Operation | Determine power operation for FloBle Plus. The affects how startReader and stopReader control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.
+Transmit Power | Control the power of the NFC polling on the FloBle Plus.
+Allow Multiconnect | Control whether multiple FloBle devices can connect simultaneously 
 
-`GET http://example.com/api/kittens`
+## Listen for Reader Events
 
-### Query Parameters
+```objective_c
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+- (void)active {
+  NSLog(@"App Activated");
+}
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+- (void)inactive {
+  NSLog(@"App Inactive");
+}
 
-## Get a Specific Kitten
+- (void)didFindTagWithUuid:(NSString *)Uuid fromDevice:(NSString *)deviceId withAtr:(NSString *)Atr withError:(NSError *)error{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Use the main queue if the UI must be updated with the tag UUID or the deviceId
+        NSLog(@"Found tag UUID: %@ from device:%@",Uuid,deviceId);
+    });
+}
 
-```ruby
-require 'kittn'
+- (void)didFindTagWithData:(NSDictionary *)payload fromDevice:(NSString *)deviceId withAtr:(NSString *)Atr withError:(NSError *)error{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //Use the main queue if the UI must be updated with the tag data or the deviceId
+        if (payload[@"Raw Data"]){
+            NSLog(@"Found raw data: %@ from device:%@",payload[@"Raw Data"] ,deviceId);
+        } else if (payload[@"Ndef"]) {
+            NSLog(@"Found Ndef Message: %@ from device:%@",payload[@"Ndef"] ,deviceId);
+        }
+    });
+}
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+- (void)didReceiveReaderError:(NSError *)error {
+    dispatch_async(dispatch_get_main_queue(), ^{ // Second dispatch message to log tag and restore screen
+       NSLog(@"%@",error); //Reader error
+    });
+}
 
-```python
-import kittn
+- (void)didUpdateConnectedDevices:(NSArray *)connectedDevices {
+    //The list of connected devices was updated
+}
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+- (void)didChangeCardStatus:(CardStatus)status fromDevice:(NSString *)deviceId {
+     //The card status has entered or left the scan range of the reader
+    // Cardstatus:
+    // 0:kNotPresent
+    // 1:kPresent
+    // 2:kReadingData
 }
 ```
 
-This endpoint retrieves a specific kitten.
+```swift
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+func inactive() {
+        print("App Inactive")
+    }
+    
+func active() {
+        print("App Activated")
+    }
 
-### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+func didFindTag(withUuid Uuid: String!, fromDevice deviceId: String!, withAtr Atr: String!, withError error: Error!) {
+        DispatchQueue.main.async {
+            if let thisUuid = Uuid, let thisDeviceId = deviceId {
+                print("Did find UUID: \(thisUuid) from Device: \(thisDeviceId)")
+            } else {
+                print(error)
+            }
+        }
+    }
+    
+func didFindTag(withData payload: [AnyHashable : Any]!, fromDevice deviceId: String!, withAtr Atr: String!, withError error: Error!) {
+    DispatchQueue.main.async {
+        let thisDeviceId = deviceId
+        if let thisPayload = payload["Raw Data"] {
+            print("Did find payload: \(thisPayload) from Device: \(thisDeviceId)")
+        } else if let ndef = payload["Ndef"] {
+            print("Did find payload: \(ndef) from Device: \(thisDeviceId)")
+        } 
+    }
+}
 
-### URL Parameters
+func didUpdateConnectedDevices(_ devices: [Any]!) {
+    //The list of connected devices was updated
+}
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+func didChange(_ status: CardStatus, fromDevice device: String!) {
+    DispatchQueue.main.async {
+        //The card status has entered or left the scan range of the reader
+        // Cardstatus:
+        // 0:CardStatus.notPresent
+        // 1:CardStatus.present
+        // 2:CardStatus.readingData
+    }
+}
 
+func didReceiveReaderError(_ error: Error!) {
+    DispatchQueue.main.async {
+        print("Error: \(error)")
+    }
+}
+```
+
+Add the FlomioSessionManager delegates to receive scan events and reader status changes. First you need to indicate that you will conform to the FmSessionManagerDelegate and then add the delegate methods.
+
+### Delegates
+ 
+ Here is a quick summary of the notifications your app will receive from the Flomio SDK. 
+
+ Delegate | Description
+--------- | -------
+didFindTagWithUuid(uuid) withAtr(atr) | Tag has been detected by the reader while in Reader State:Read UUID mode
+didFindTagWithData withAtr(atr) | Tag has been detected by the reader while in Reader State:Read Data mode
+to be continued...
+
+# Android Integration
+
+# Common Questions
+
+Q | A
+--------- | -------
+Can the SDK run in the background? | We don't expect Apps to ever be able operate FloJacks in the background. The FloJack requires a heartbeat handshake in order to prevent it from going into sleep mode and it's not possible to handle from background. The active/inactive methods in the ViewController are meant to wake/sleep the reader during foregounding/backgrounding. The FloBLE products are able to operate from a backgrounded app state. Also several of the same FloBLE products can connect to the iOS device at once (max 7 connected FloBLEs at a time).
+
+
+# Get Help
+
+Please visit [the forums](https://flomio.com/forums/forum/ask-the-flomies/) for help and to see previous questions.

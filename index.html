@@ -154,17 +154,17 @@ and click &ldquo;Create groups&rdquo; and &ldquo;Finish&rdquo; in dialog.</p></l
 Click the Project Navigator (on the left), then click the
 application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Settings 
 -&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’</code></p></li>
-<li><p>In Targets -&gt; YourAppTarget -&gt; Build Options 
--&gt; Enable Bitcode set to ‘No’</p></li>
-<li><p>(optional) In Target -&gt; Build Settings
--&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</p></li>
-<li><p>In Targets -&gt; YourAppTarget -&gt; General
--&gt; Link Binary with Libraries, add MediaPlayer.Framework</p></li>
-<li><p>For Swift Developers, add a bridge header file: File -&gt; New &gt; File&hellip; &gt; Header File
+<li><p><code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Options 
+-&gt; Enable Bitcode set to ‘No’</code></p></li>
+<li><p>(optional) <code class="prettyprint">In Target -&gt; Build Settings
+-&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</code></p></li>
+<li><p><code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; General
+-&gt; Link Binary with Libraries, add MediaPlayer.Framework</code></p></li>
+<li><p>For Swift Developers: Add a bridge header file: <code class="prettyprint">File -&gt; New &gt; File... &gt; Header File</code>
 and name it ViewController-Bridging-Header.h</p></li>
-<li><p>For Swift Developers, in Targets -&gt; YourAppTarget -&gt; Build Options
+<li><p>For Swift Developers: <code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Options
 -&gt; Swift Compiler - General -&gt; Objective-C Bridging Header,
-add ViewController-Bridging-Header.h</p></li>
+add</code>ViewController-Bridging-Header.h`</p></li>
 </ol>
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>

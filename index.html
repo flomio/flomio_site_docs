@@ -115,12 +115,11 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="documentation">Documentation</h1>
+        <h1 id="welcome">Welcome</h1>
 
-<p>Documentation
-Welcome to Flomio! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
+<p>Welcome to Flomio! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
 
-<p>Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS, Android, and WindowsPhone.</p>
+<p>Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.</p>
 
 <p>You can use the Flomio SDK alongside any of Flomio&rsquo;s line of NFC, BLE, and UHF RFID readers.</p>
 
@@ -139,7 +138,7 @@ and unzip it. </p>
 
 <h1 id="ios-integration">iOS Integration</h1>
 
-<p>Our iOS libraries let you easily collect your customers/items tag information in your iOS app. </p>
+<p>Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project.</p>
 
 <h2 id="configure-project-settings">Configure Project Settings</h2>
 
@@ -153,9 +152,8 @@ Make sure the &ldquo;Copy items if needed&rdquo; option is selected
 and click &ldquo;Create groups&rdquo; and &ldquo;Finish&rdquo; in dialog.</p></li>
 <li><p>You must configure your application with the following settings.<br>
 Click the Project Navigator (on the left), then click the
-application name under TARGET
-In Targets -&gt; YourAppTarget -&gt; Build Settings 
--&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’</p></li>
+application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Settings 
+-&gt; Linking -&gt; Other Linker Flags add ‘-lc++’ and ’-ObjC’</code></p></li>
 <li><p>In Targets -&gt; YourAppTarget -&gt; Build Options 
 -&gt; Enable Bitcode set to ‘No’</p></li>
 <li><p>(optional) In Target -&gt; Build Settings
@@ -371,7 +369,7 @@ add ViewController-Bridging-Header.h</p></li>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
-<p>Add callbacks/delegates to receive scan events and reader status changes. </p>
+<p>Add the FlomioSessionManager delegates to receive scan events and reader status changes. First you need to indicate that you will conform to the FmSessionManagerDelegate and then add the delegate methods.</p>
 
 <h3 id="delegates">Delegates</h3>
 
@@ -379,7 +377,7 @@ add ViewController-Bridging-Header.h</p></li>
 
 <table><thead>
 <tr>
-<th>Callback</th>
+<th>Delegate</th>
 <th>Description</th>
 </tr>
 </thead><tbody>

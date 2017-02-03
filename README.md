@@ -38,6 +38,7 @@ Push the markdown source changes to Github: git push
 ./deploy.sh
 ```
 
+Edit the index.html.md file to change the content.
 [Editing Slate markdown](https://github.com/lord/slate/wiki/Markdown-Syntax)
 
 ### Troubleshooting

@@ -18,7 +18,7 @@ You're going to need:
 ### Editing site
 
 1. Add yourself as a contributor to this project.
-2. Clone to your hard drive with `git clone git@github.com:yummytech/DeveloperHub.git`
+2. Clone to your hard drive with `git clone https://github.com/yummytech/DeveloperHub.git`
 3. `cd DeveloperHub`
 4. Initialize and start Slate.
 

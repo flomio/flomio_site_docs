@@ -15,7 +15,7 @@ search: true
 
 # Welcome
 
-Welcome to Flomio! Get familiar with the Flomio products and explore their features in the [Flomio Shop](https://flomio.com/shop/)
+Welcome to Flomio!! Get familiar with the Flomio products and explore their features in the [Flomio Shop](https://flomio.com/shop/)
 
 Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.
 

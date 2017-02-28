@@ -117,8 +117,7 @@
       <div class="content">
         <h1 id="welcome">Welcome</h1>
 
-<p>TEST TEST TEST
-Welcome to Flomio!! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
+<p>Welcome to Flomio!! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
 
 <p>Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.</p>
 
@@ -134,8 +133,7 @@ Welcome to Flomio!! Get familiar with the Flomio products and explore their feat
 
 <h2 id="download-the-libraries">Download the Libraries</h2>
 
-<p><a href="https://www.dropbox.com/s/v4yiasrq443ws5p/FlomioSDKv2.1_beta.zip?dl=1">Download the latest Flomio SDK</a>
-and unzip it. </p>
+<p><a href="https://www.dropbox.com/s/y5qloadwievtjp4/FlomioSDK.zip?dl=1">Download the latest Flomio SDK</a> and unzip it. </p>
 
 <h1 id="ios-integration">iOS Integration</h1>
 
@@ -278,22 +276,14 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 
 <h2 id="listen-for-reader-events">Listen for Reader Events</h2>
 <pre class="highlight objective_c"><code>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">active</span> <span class="p">{</span>
-  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Activated"</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">inactive</span> <span class="p">{</span>
-  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Inactive"</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didFindTagWithUuid</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Uuid</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="n">withAtr</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Atr</span> <span class="n">withError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTagWithUuid</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Uuid</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="nf">withAtr</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Atr</span> <span class="nf">withError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">{</span>
     <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
         <span class="c1">//Use the main queue if the UI must be updated with the tag UUID or the deviceId
 </span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found tag UUID: %@ from device:%@"</span><span class="p">,</span><span class="n">Uuid</span><span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didFindTagWithData</span><span class="o">:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">payload</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="n">withAtr</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">Atr</span> <span class="n">withError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTagWithData</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">payload</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="nf">withAtr</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Atr</span> <span class="nf">withError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">{</span>
     <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
         <span class="c1">//Use the main queue if the UI must be updated with the tag data or the deviceId
 </span>        <span class="k">if</span> <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Raw Data"</span><span class="p">]){</span>
@@ -304,17 +294,17 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
     <span class="p">});</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didReceiveReaderError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didReceiveReaderError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span> <span class="p">{</span>
     <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span> <span class="c1">// Second dispatch message to log tag and restore screen
 </span>       <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span> <span class="c1">//Reader error
 </span>    <span class="p">});</span>
 <span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didUpdateConnectedDevices</span><span class="o">:</span><span class="p">(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="n">connectedDevices</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didUpdateConnectedDevices</span><span class="p">:(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">connectedDevices</span> <span class="p">{</span>
     <span class="c1">//The list of connected devices was updated
 </span><span class="p">}</span>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didChangeCardStatus</span><span class="o">:</span><span class="p">(</span><span class="n">CardStatus</span><span class="p">)</span><span class="n">status</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceId</span> <span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeCardStatus</span><span class="p">:(</span><span class="n">CardStatus</span><span class="p">)</span><span class="nv">status</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="p">{</span>
      <span class="c1">//The card status has entered or left the scan range of the reader
 </span>    <span class="c1">// Cardstatus:
 </span>    <span class="c1">// 0:kNotPresent
@@ -322,15 +312,6 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 </span>    <span class="c1">// 2:kReadingData
 </span><span class="p">}</span>
 </code></pre><pre class="highlight swift"><code>
-<span class="kd">func</span> <span class="nf">inactive</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="s">"App Inactive"</span><span class="p">)</span>
-    <span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">active</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="s">"App Activated"</span><span class="p">)</span>
-    <span class="p">}</span>
-
-
 <span class="kd">func</span> <span class="nf">didFindTag</span><span class="p">(</span><span class="n">withUuid</span> <span class="kt">Uuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withAtr</span> <span class="kt">Atr</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
             <span class="k">if</span> <span class="k">let</span> <span class="nv">thisUuid</span> <span class="o">=</span> <span class="kt">Uuid</span><span class="p">,</span> <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span> <span class="p">{</span>
@@ -392,9 +373,57 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 <td>didFindTagWithData withAtr(atr)</td>
 <td>Tag has been detected by the reader while in Reader State:Read Data mode</td>
 </tr>
+<tr>
+<td>didChangeStatus fromDevice(deviceId)</td>
+<td>Reader has changed it&rsquo;s status: battery or tag status.</td>
+</tr>
 </tbody></table>
 
-<p>to be continued&hellip;</p>
+<h2 id="start-stop-the-reader">Start/Stop the Reader</h2>
+<pre class="highlight objective_c"><code>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">active</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Activated"</span><span class="p">);</span>
+  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">startReaders</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">inactive</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Inactive"</span><span class="p">);</span>
+  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">stopReaders</span><span class="p">];</span> 
+  <span class="c1">// or 
+</span>  <span class="c1">// [readerManager sleepReaders]; 
+</span><span class="p">}</span>
+</code></pre><pre class="highlight swift"><code>
+<span class="kd">func</span> <span class="nf">inactive</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"App Inactive"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">active</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"App Activated"</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre>
+<p>The Flomio SDK provides an interface to start and stop the reader activity. These can be used when your app goes into the background or the user navigates to a screen when scanning should not be enabled. </p>
+
+<h3 id="methods">Methods</h3>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>startReaders</td>
+<td>Enable paired or connected readers to begin polling for tags. This method will reinitialize reader if needed.</td>
+</tr>
+<tr>
+<td>stopReaders</td>
+<td>Disable paired or connected readers from polling for tags.</td>
+</tr>
+<tr>
+<td>sleepReaders</td>
+<td>Place paired or connected readers in low power mode. This can mean different things depending on &ldquo;Power Operation&rdquo; setting.</td>
+</tr>
+</tbody></table>
 
 <h1 id="android-integration">Android Integration</h1>
 

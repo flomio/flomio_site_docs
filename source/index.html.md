@@ -31,8 +31,7 @@ Our native libraries for Android and iOS lets you collect NFC / UHF RFID without
 
 ## Download the Libraries
 
-[Download the latest Flomio SDK](https://www.dropbox.com/s/v4yiasrq443ws5p/FlomioSDKv2.1_beta.zip?dl=1)
-and unzip it. 
+[Download the latest Flomio SDK](https://www.dropbox.com/s/y5qloadwievtjp4/FlomioSDK.zip?dl=1) and unzip it. 
 
 # iOS Integration
 
@@ -160,14 +159,6 @@ Allow Multiconnect | Control whether multiple FloBle devices can connect simulta
 
 ```objective_c
 
-- (void)active {
-  NSLog(@"App Activated");
-}
-
-- (void)inactive {
-  NSLog(@"App Inactive");
-}
-
 - (void)didFindTagWithUuid:(NSString *)Uuid fromDevice:(NSString *)deviceId withAtr:(NSString *)Atr withError:(NSError *)error{
     dispatch_async(dispatch_get_main_queue(), ^{
         //Use the main queue if the UI must be updated with the tag UUID or the deviceId
@@ -206,15 +197,6 @@ Allow Multiconnect | Control whether multiple FloBle devices can connect simulta
 ```
 
 ```swift
-
-func inactive() {
-        print("App Inactive")
-    }
-    
-func active() {
-        print("App Activated")
-    }
-
 
 func didFindTag(withUuid Uuid: String!, fromDevice deviceId: String!, withAtr Atr: String!, withError error: Error!) {
         DispatchQueue.main.async {
@@ -268,7 +250,42 @@ Add the FlomioSessionManager delegates to receive scan events and reader status 
 --------- | -------
 didFindTagWithUuid(uuid) withAtr(atr) | Tag has been detected by the reader while in Reader State:Read UUID mode
 didFindTagWithData withAtr(atr) | Tag has been detected by the reader while in Reader State:Read Data mode
-to be continued...
+didChangeStatus fromDevice(deviceId) | Reader has changed it's status: battery or tag status. 
+
+## Start/Stop the Reader
+```objective_c
+
+- (void)active {
+  NSLog(@"App Activated");
+  [readerManager startReaders];
+}
+
+- (void)inactive {
+  NSLog(@"App Inactive");
+  [readerManager stopReaders]; 
+  // or 
+  // [readerManager sleepReaders]; 
+}
+```
+```swift
+
+func inactive() {
+        print("App Inactive")
+    }
+    
+func active() {
+        print("App Activated")
+    }
+```
+The Flomio SDK provides an interface to start and stop the reader activity. These can be used when your app goes into the background or the user navigates to a screen when scanning should not be enabled. 
+
+### Methods
+
+ Method | Description
+--------- | -------
+startReaders | Enable paired or connected readers to begin polling for tags. This method will reinitialize reader if needed. 
+stopReaders  | Disable paired or connected readers from polling for tags.
+sleepReaders | Place paired or connected readers in low power mode. This can mean different things depending on "Power Operation" setting.
 
 # Android Integration
 

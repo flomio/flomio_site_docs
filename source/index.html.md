@@ -321,7 +321,7 @@ Go to [IFTTT Create](https://ifttt.com/create). Click "+this", search 'Maker Web
 
 Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. 
 
-Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type 'Now' into start time, click 'create' and 'finish'.  
+Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type 'Now' into start time, click 'create' and 'finish'.   
 
 Below are details of the values/'ingredients' sent with the trigger.
 

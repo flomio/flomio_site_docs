@@ -445,18 +445,21 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 
 <h3 id="get-maker-webhook-url">Get Maker Webhook URL</h3>
 
-<p>Then you&rsquo;ll need to go to get your Maker Webhook URL from the Maker Webhook settings. First connect <a href="https://ifttt.com/services/maker_webhooks/settings/connect">Maker Webhook</a> and then copy your Maker URL which should look like this: https://maker.ifttt.com/use/ciaOj1jhrldDVFHVn3XwwG-QTh18JHbQoiB3b-Cd02h</p>
+<p>Then you&rsquo;ll need to go to get your Maker Webhook URL from the Maker Webhook settings. First connect <a href="https://ifttt.com/services/maker_webhooks/settings/connect">Maker Webhooks</a> and then copy your Maker URL which should look like this: </p>
 
-<p>Side note (optional): Navigate to that URL to see details about how to make HTTP POST requests to that trigger events.</p>
+<p>https://maker.ifttt.com/use/ciaOj1jhrldDVFHVn3XwwG-QTh18JHbQoiB3b-Cd02h</p>
+
+<p>Side note (optional): Navigate to your Maker URL to see details about how to make HTTP POST requests to trigger events.</p>
 
 <h2 id="create-your-ifttt-applet">Create your IFTTT Applet</h2>
 
 <p>You want to create your IFTTT Applet using Maker Webhooks to trigger your event&hellip; Sounds a lot more complicated than it is.</p>
 
-<p>Go to <a href="https://ifttt.com/create">IFTTT Create</a>. Click &ldquo;+this&rdquo;, search &#39;Maker Webhooks&rsquo; and select it. Select &#39;Receive a web request&rsquo; and name your event to, for example, &#39;tag_scanned&rsquo;.
-Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. </p>
+<p>Go to <a href="https://ifttt.com/create">IFTTT Create</a>. Click &ldquo;+this&rdquo;, search &#39;Maker Webhooks&rsquo; and select it. Select &#39;Receive a web request&rsquo; and name your event to, for example, &#39;tag_scanned&rsquo;.</p>
 
-<p>Now click &rsquo;+that&rsquo;, we will use iOS Calendar as an example here but you can use what you want. Click &#39;create a calendar event&rsquo;. Now configure your event to show the details of the tag scan. Type Now into start time, click create and finish.  </p>
+<p>Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. </p>
+
+<p>Now click &rsquo;+that&rsquo;, we will use iOS Calendar as an example here but you can use what you want. Click &#39;create a calendar event&rsquo;. Now configure your event to show the details of the tag scan. Type &#39;Now&rsquo; into start time, click &#39;create&rsquo; and &#39;finish&rsquo;.  </p>
 
 <p>Below are details of the values/&#39;ingredients&rsquo; sent with the trigger.</p>
 

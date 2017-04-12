@@ -289,6 +289,49 @@ sleepReaders | Place paired or connected readers in low power mode. This can mea
 
 # Android Integration
 
+# NFC Actions & IFTTT
+
+The recently revamped [NFC Actions app](https://appsto.re/ie/AQ-bN.i) is now available in the App Store. 🎉🍾🥂
+
+Use your [FloBle Plus](https://flomio.com/shop/readers/floble-plus-nfc-reader-for-mobile/) to write and read NFC tags (specifically Mifare Ultralight tags).
+
+It also works with [IFTTT](https://ifttt.com/) so you can use NFC to automate your daily routine or prototype your NFC start-up without needing a front end app! 
+
+For example, with IFTTT combined with NFC Actions, you can log employees time and attendance, you can monitor inventory or control smart devices with a tap! 
+
+## Set up your IFTTT
+
+### Create IFTTT Account 
+
+First, you obviously need a [IFTTT account](https://ifttt.com/join). 
+
+### Get Maker Webhook URL 
+
+Then you'll need to go to get your Maker Webhook URL from the Maker Webhook settings. First connect [Maker Webhook](https://ifttt.com/services/maker_webhooks/settings/connect) and then copy your Maker URL which should look like this: https://maker.ifttt.com/use/ciaOj1jhrldDVFHVn3XwwG-QTh18JHbQoiB3b-Cd02h
+Side note (optional): Navigate to that URL to see details about how to make HTTP POST requests to that trigger events.
+
+## Create your IFTTT Applet
+
+You want to create your IFTTT Applet using Maker Webhooks to trigger your event... Sounds a lot more complicated than it is.
+Go to [IFTTT Create](https://ifttt.com/create). Click "+this", search 'Maker Webhooks' and select it. Select 'Receive a web request' and name your event to, for example, 'tag_scanned'.
+Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. 
+
+Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type Now into start time, click create and finish.
+
+Below are details of the values/'ingredients' sent with the trigger.
+
+## IFTTT Ingredients 
+
+ Ingredient | Description
+--------- | -------
+Value1 |  Tag UUID
+Value2  | Tag Location in Google Maps
+Value3 | Tag Payload (write to tag in NFC Actions to use this)
+
+### Paste the URL in NFC Actions 
+
+Now that you have your Maker URL and Maker Event Name, go to the [NFC Actions app](https://appsto.re/ie/AQ-bN.i) and navigate to settings and paste them into the IFTTT settings fields. 
+
 # Common Questions
 
 Q | A

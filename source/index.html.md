@@ -307,18 +307,21 @@ First, you obviously need a [IFTTT account](https://ifttt.com/join).
 
 ### Get Maker Webhook URL 
 
-Then you'll need to go to get your Maker Webhook URL from the Maker Webhook settings. First connect [Maker Webhook](https://ifttt.com/services/maker_webhooks/settings/connect) and then copy your Maker URL which should look like this: https://maker.ifttt.com/use/ciaOj1jhrldDVFHVn3XwwG-QTh18JHbQoiB3b-Cd02h
+Then you'll need to go to get your Maker Webhook URL from the Maker Webhook settings. First connect [Maker Webhooks](https://ifttt.com/services/maker_webhooks/settings/connect) and then copy your Maker URL which should look like this: 
 
-Side note (optional): Navigate to that URL to see details about how to make HTTP POST requests to that trigger events.
+https://maker.ifttt.com/use/ciaOj1jhrldDVFHVn3XwwG-QTh18JHbQoiB3b-Cd02h
+
+Side note (optional): Navigate to your Maker URL to see details about how to make HTTP POST requests to trigger events.
 
 ## Create your IFTTT Applet
 
 You want to create your IFTTT Applet using Maker Webhooks to trigger your event... Sounds a lot more complicated than it is.
 
 Go to [IFTTT Create](https://ifttt.com/create). Click "+this", search 'Maker Webhooks' and select it. Select 'Receive a web request' and name your event to, for example, 'tag_scanned'.
+
 Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. 
 
-Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type Now into start time, click create and finish.
+Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type 'Now' into start time, click 'create' and 'finish'.  
 
 Below are details of the values/'ingredients' sent with the trigger.
 

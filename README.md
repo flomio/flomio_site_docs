@@ -19,7 +19,7 @@ You're going to need:
 
 1. Add yourself as a contributor to this project.
 2. Clone to your hard drive with `git clone https://github.com/flomio/flomio_site_docs.git`
-3. `cd DeveloperHub`
+3. `cd flomio_site_docs`
 4. Initialize and start Slate.
 
 ```shell

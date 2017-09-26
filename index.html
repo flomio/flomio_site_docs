@@ -127,9 +127,23 @@
 
 <h1 id="getting-started">Getting Started</h1>
 
-<p>Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If you still need a helping hand after this, feel free to <a href="https://flomio.com/forums/forum/ask-the-flomies/">ask the flomies</a>.</p>
+<p>Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to <a href="https://flomio.com/forums/forum/ask-the-flomies/">ask the flomies</a>.</p>
 
-<p>Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and the tag.</p>
+<p>Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and tag. As a sanity check that your reader hardware is fully operational you should install the Flomio Test app via TestFlight.</p>
+
+<h2 id="install-flomio-test-app-via-testflight">Install Flomio Test app via TestFlight</h2>
+
+<p>You can now register to <a href="https://flomio-mw.herokuapp.com/">download the Flomio Test app</a> via TestFlight. Once registered, you&rsquo;ll recieve an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:</p>
+
+<ul>
+<li>FloJack BZR</li>
+<li>FloJack MSR</li>
+<li>FloJack Gen2</li>
+<li>FloBLE EMV</li>
+<li>FloBLE Plus</li>
+</ul>
+
+<p>You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio madulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. </p>
 
 <h2 id="download-the-libraries">Download the Libraries</h2>
 
@@ -165,8 +179,6 @@ and name it ViewController-Bridging-Header.h</p></li>
 -&gt; Swift Compiler - General -&gt; Objective-C Bridging Header</code>,
 add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 </ol>
-
-<p><strong>Note:</strong> Since we don’t support testing the SDK via the iOS Simulator we don’t compile the library for i386 and x86_64 target architectures.</p>
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
 <pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>

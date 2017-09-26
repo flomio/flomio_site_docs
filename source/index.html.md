@@ -25,9 +25,20 @@ You can view code examples in the dark area to the right, and you can switch the
 
 # Getting Started
 
-Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If you still need a helping hand after this, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
+Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
 
-Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and the tag.
+Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and tag. As a sanity check that your reader hardware is fully operational you should install the Flomio Test app via TestFlight.
+
+## Install Flomio Test app via TestFlight
+You can now register to [download the Flomio Test app](https://flomio-mw.herokuapp.com/) via TestFlight. Once registered, you'll recieve an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
+
++ FloJack BZR
++ FloJack MSR
++ FloJack Gen2
++ FloBLE EMV
++ FloBLE Plus
+
+You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio madulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. 
 
 ## Download the Libraries
 

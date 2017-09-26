@@ -29,7 +29,7 @@ Flomio helps you add a reader to your app so you can scan a tag to get a unique 
 
 Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and tag. As a sanity check that your reader hardware is fully operational you should install the Flomio Test app via TestFlight.
 
-## Install Flomio Test app via TestFlight
+## Install Flomio Test app
 You can now register to [download the Flomio Test app](https://flomio-mw.herokuapp.com/) via TestFlight. Once registered, you'll recieve an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
 
 + FloJack BZR

@@ -79,6 +79,8 @@ and name it ViewController-Bridging-Header.h
 -> Swift Compiler - General -> Objective-C Bridging Header`,
 add `ViewController-Bridging-Header.h`
 
+**Note:** Since we don’t support testing the SDK via the iOS Simulator we don’t compile the library for i386 and x86_64 target architectures.</p>
+
 ## Initialize the Flomio SDK
 
 ```objective_c

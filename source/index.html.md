@@ -25,9 +25,11 @@ You can view code examples in the dark area to the right, and you can switch the
 
 # Getting Started
 
-Flomio helps you add a reader to your app so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
+Flomio helps you build apps with NFC and RFID support so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
 
-Our native libraries for Android and iOS lets you collect NFC / UHF RFID without having to deal with the stress of managing the low level interactions between the reader and tag. As a sanity check that your reader hardware is fully operational you should install the Flomio Test app via TestFlight.
+Our Flomio SDK consists of native libraries for Android and iOS that let you collect NFC and RFID without having to deal with the stress of managing the low level interactions between the reader and tag. The Flomio SDK comes in 2 flavors, Basic and Pro. The Basic SDK checks for proper licence on our cloud server so it requires connectivity to work. The Pro SDK works completely offline. More details in FAQ section below. 
+
+To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encoutner during your integration.
 
 ## Install Flomio Test app
 You can now register to [download the Flomio Test app](https://flomio-mw.herokuapp.com/) via TestFlight. Once registered, you'll recieve an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
@@ -350,11 +352,12 @@ Value3 | Tag Payload (write to tag in NFC Actions to use this)
 
 Now that you have your Maker URL and Maker Event Name, go to the [NFC Actions app](https://appsto.re/ie/AQ-bN.i) and navigate to settings and paste them into the IFTTT settings fields. 
 
-# Common Questions
+# Frequently Asked Questions
 
 Q | A
 --------- | -------
  Can the SDK run in the background? | We don't expect Apps to ever be able operate FloJacks in the background. The FloJack requires a heartbeat handshake in order to prevent it from going into sleep mode and it's not possible to handle from background. The active/inactive methods in the ViewController are meant to wake/sleep the reader during foregounding/backgrounding. The FloBLE products are able to operate from a backgrounded app state. Also several of the same FloBLE products can connect to the iOS device at once (max 7 connected FloBLEs at a time).
+What's the difference between the Basic SDK and the Pro SDK? | The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you're always gauranteed a good result. 
 
 
 # Get Help

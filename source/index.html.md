@@ -27,7 +27,7 @@ You can view code examples in the dark area to the right, and you can switch the
 
 Flomio helps you build apps with NFC and RFID support so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
 
-Our Flomio SDK consists of native libraries for Android and iOS that let you collect NFC and RFID without having to deal with the stress of managing the low level interactions between the reader and tag. The Flomio SDK comes in 2 flavors, Basic and Pro. The Basic SDK checks for proper licence on our cloud server so it requires connectivity to work. The Pro SDK works completely offline. More details in FAQ section below. 
+Our Flomio SDK consists of native libraries for Android and iOS that let you collect NFC and RFID without having to deal with the stress of managing the low level interactions between the reader and tag. The Flomio SDK comes in 2 flavors, Basic and Pro. The Basic SDK checks for proper license on our cloud server so it requires connectivity to work. The Pro SDK works completely offline. More details in FAQ section below. 
 
 To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encoutner during your integration.
 
@@ -357,7 +357,7 @@ Now that you have your Maker URL and Maker Event Name, go to the [NFC Actions ap
 Q | A
 --------- | -------
  Can the SDK run in the background? | We don't expect Apps to ever be able operate FloJacks in the background. The FloJack requires a heartbeat handshake in order to prevent it from going into sleep mode and it's not possible to handle from background. The active/inactive methods in the ViewController are meant to wake/sleep the reader during foregounding/backgrounding. The FloBLE products are able to operate from a backgrounded app state. Also several of the same FloBLE products can connect to the iOS device at once (max 7 connected FloBLEs at a time).
-What's the difference between the Basic SDK and the Pro SDK? | The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you're always gauranteed a good result. 
+What's the difference between the Basic SDK and the Pro SDK? | The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you're always guaranteed a good result. 
 
 
 # Get Help

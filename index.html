@@ -172,9 +172,9 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <li><p><code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Options 
 -&gt; Enable Bitcode set to ‘No’</code></p></li>
 <li><p>(optional) <code class="prettyprint">In Target -&gt; Build Settings
--&gt; Apple LLVM 7.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</code></p></li>
+-&gt; Apple LLVM 9.0-Preprocessing -&gt; Preprocessor Macros add ‘DEBUGLOG’</code></p></li>
 <li><p><code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; General
--&gt; Link Binary with Libraries, add MediaPlayer.Framework</code></p></li>
+-&gt; Link Binary with Libraries, add MediaPlayer.Framework and libz.tbd</code></p></li>
 <li><p>For Swift Developers: Add a bridge header file: <code class="prettyprint">File -&gt; New &gt; File... &gt; Header File</code>
 and name it ViewController-Bridging-Header.h</p></li>
 <li><p>For Swift Developers: <code class="prettyprint">In Targets -&gt; YourAppTarget -&gt; Build Options
@@ -185,71 +185,66 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 <p><strong>Note:</strong> Since we don’t support testing the SDK via the iOS Simulator we don’t compile the library for i386 and x86_64 target architectures.</p></p>
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
-<pre class="highlight objective_c"><code><span class="o">------------------------------------------</span>
-<span class="c1">// in YourViewController.h, add this to viewDidLoad
-</span><span class="cp">#import "FmSessionManager.h"
+<pre class="highlight objective_c"><code>    <span class="o">------------------------------------------</span>
+    <span class="c1">// in YourViewController.h, add this to viewDidLoad
+</span>    <span class="cp">#import "FmSessionManager.h"
 </span>
-<span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
-  <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">readerManager</span><span class="p">;</span>
-<span class="p">}</span>   
+    <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">_deviceUuid</span><span class="p">;</span>
+        <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">flomioMW</span><span class="p">;</span>
+    <span class="p">}</span>   
 
-<span class="k">@end</span>
+    <span class="k">@end</span>
 
-<span class="o">------------------------------------------</span>
-<span class="c1">// in YourViewController.m, add this to viewDidLoad
-</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
-  <span class="n">readerManager</span> <span class="o">=</span> <span class="p">[</span><span class="n">FmSessionManager</span> <span class="nf">sharedManager</span><span class="p">];</span>
-  <span class="n">readerManager</span><span class="p">.</span><span class="n">selectedDeviceType</span> <span class="o">=</span> <span class="n">kFloBlePlus</span><span class="p">;</span> <span class="c1">// For FloBLE Plus
-</span>  <span class="c1">//kFlojackMsr, kFlojackBzr for audiojack readers
-</span>  <span class="n">readerManager</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
-  <span class="n">readerManager</span><span class="p">.</span><span class="n">specificDeviceId</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span> 
-  <span class="c1">//@"RR330-000120" use device id from back of device to only connect to specific device
-</span>  <span class="c1">// only for use when "Allow Multiconnect" = @0
-</span>
-  <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">configurationDictionary</span> <span class="o">=</span> <span class="p">@{</span>
-    <span class="s">@"Scan Sound"</span> <span class="o">:</span> <span class="mi">@1</span><span class="p">,</span>
-    <span class="s">@"Scan Period"</span> <span class="o">:</span> <span class="mi">@1000</span><span class="p">,</span>
-    <span class="s">@"Reader State"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span><span class="n">kReadUuid</span><span class="p">],</span> <span class="c1">//kReadData for NDEF
-</span>    <span class="s">@"Power Operation"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span><span class="n">kAutoPollingControl</span><span class="p">],</span> <span class="c1">//kBluetoothConnectionControl low power usage
-</span>    <span class="s">@"Transmit Power"</span> <span class="o">:</span> <span class="p">[</span><span class="n">NSNumber</span> <span class="nf">numberWithInt</span><span class="p">:</span> <span class="n">kHighPower</span><span class="p">],</span>
-    <span class="s">@"Allow Multiconnect"</span> <span class="o">:</span> <span class="mi">@0</span><span class="p">,</span> <span class="c1">//control whether multiple FloBLE devices can connect
-</span>    <span class="p">};</span>
+    <span class="o">------------------------------------------</span>
+    <span class="c1">// in YourViewController.m, add this to viewDidLoad
+</span>    <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+      <span class="n">FmConfiguration</span> <span class="o">*</span><span class="n">defaultConfiguration</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmConfiguration</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">deviceType</span> <span class="o">=</span> <span class="n">kFloBlePlus</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">transmitPower</span> <span class="o">=</span> <span class="n">kHighPower</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">scanSound</span> <span class="o">=</span> <span class="nb">@YES</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">scanPeriod</span> <span class="o">=</span> <span class="mi">@1000</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">powerOperation</span> <span class="o">=</span> <span class="n">kAutoPollingControl</span><span class="p">;</span> <span class="c1">//, kBluetoothConnectionControl for low power usage
+</span>          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">transmitPower</span> <span class="o">=</span> <span class="n">kHighPower</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">allowMultiConnect</span> <span class="o">=</span> <span class="nb">@NO</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">specificDeviceUuid</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span> <span class="c1">//@"RR330-000120";
+</span>          <span class="n">flomioMW</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmSessionManager</span> <span class="nf">flomioMW</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">defaultConfiguration</span><span class="p">];</span>
+          <span class="n">flomioMW</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
 
-  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">setConfiguration</span><span class="p">:</span> <span class="n">configurationDictionary</span><span class="p">];</span>
-  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">createReaders</span><span class="p">];</span>
-<span class="p">}</span>
+    <span class="p">}</span>
 
-</code></pre><pre class="highlight swift"><code><span class="o">------------------------------------------</span>
-<span class="c1">// in ViewController-Bridging-Header.h, add</span>
-<span class="cp">#import "FmSessionManager.h"</span>
+    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">inactive</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">UIApplicationDidEnterBackgroundNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">active</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">UIApplicationDidBecomeActiveNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
 
 
-<span class="o">------------------------------------------</span>
-<span class="c1">// in ViewController.swift, add</span>
+</code></pre><pre class="highlight swift"><code>    <span class="o">------------------------------------------</span>
+    <span class="c1">// in ViewController-Bridging-Header.h, add</span>
+    <span class="cp">#import "FmSessionManager.h"</span>
 
-<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
-  <span class="k">var</span> <span class="nv">device</span> <span class="p">:</span> <span class="kt">FmDevice</span><span class="p">?</span>
-  <span class="k">let</span> <span class="nv">readerManager</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
+    <span class="o">------------------------------------------</span>
+    <span class="c1">// in ViewController.swift, add</span>
 
-  <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
-      <span class="n">readerManager</span><span class="o">.</span><span class="n">selectedDeviceType</span> <span class="o">=</span> <span class="kt">DeviceType</span><span class="o">.</span><span class="n">floBlePlus</span>
-      <span class="c1">//flojackBzr, flojackMsr, flojackAny</span>
-      <span class="n">readerManager</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
-      <span class="n">readerManager</span><span class="o">.</span><span class="n">specificDeviceId</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>
-      <span class="k">let</span> <span class="nv">configurationDictionary</span> <span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span>
-          <span class="p">[</span><span class="s">"Scan Sound"</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-           <span class="s">"Scan Period"</span> <span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-           <span class="s">"Reader State"</span> <span class="p">:</span> <span class="kt">ReaderStateType</span><span class="o">.</span><span class="n">readUuid</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="c1">//readData for NDEF</span>
-           <span class="s">"Power Operation"</span> <span class="p">:</span> <span class="kt">PowerOperation</span><span class="o">.</span><span class="n">autoPollingControl</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="c1">//bluetoothConnectionControl low power usage</span>
-           <span class="s">"Transmit Power"</span> <span class="p">:</span> <span class="kt">TransmitPower</span><span class="o">.</span><span class="n">highPower</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span>
-           <span class="s">"Allow Multiconnect"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">]</span>
+      <span class="k">var</span> <span class="nv">flomioMW</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
+      <span class="k">var</span> <span class="nv">deviceUuid</span> <span class="o">=</span> <span class="s">""</span>
 
-      <span class="n">readerManager</span><span class="o">.</span><span class="nf">setConfiguration</span><span class="p">(</span><span class="n">configurationDictionary</span><span class="p">)</span>
-      <span class="n">readerManager</span><span class="o">.</span><span class="nf">createReaders</span><span class="p">()</span>
-  <span class="p">}</span>
+      <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+          <span class="k">let</span> <span class="nv">defaultConfiguration</span><span class="p">:</span> <span class="kt">FmConfiguration</span> <span class="o">=</span> <span class="kt">FmConfiguration</span><span class="p">();</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">deviceType</span> <span class="o">=</span> <span class="kt">DeviceType</span><span class="o">.</span><span class="n">kFloBlePlus</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">transmitPower</span> <span class="o">=</span> <span class="kt">TransmitPower</span><span class="o">.</span><span class="n">highPower</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">scanSound</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">scanPeriod</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">powerOperation</span> <span class="o">=</span> <span class="kt">PowerOperation</span><span class="o">.</span><span class="n">autoPollingControl</span><span class="p">;</span> <span class="c1">//, kBluetoothConnectionControl for low power usage</span>
+          <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">allowMultiConnect</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+          <span class="n">flomioMW</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="n">defaultConfiguration</span><span class="p">);</span>
+          <span class="n">flomioMW</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span> 
+      <span class="p">}</span>
+
+    <span class="p">}</span>
 
 </code></pre>
 <p>You must first configure your settings and initialize the SDK. Add the code from your language of choice (on the right) to your app to create the readers. </p>
@@ -263,113 +258,132 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 </tr>
 </thead><tbody>
 <tr>
-<td>selectedDeviceType</td>
+<td>deviceType</td>
 <td>Choose your device type, you may only use one device type at a time.</td>
 </tr>
 <tr>
-<td>specificDeviceId</td>
-<td>Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when &lsquo;Allow Multiconnect&rsquo; = @0.</td>
-</tr>
-<tr>
-<td>Scan Sound</td>
+<td>scanSound</td>
 <td>Hear notifications from Flojack MSR.</td>
 </tr>
 <tr>
-<td>Scan Period</td>
+<td>scanPeriod</td>
 <td>Period of polling for Audiojack readers.</td>
 </tr>
 <tr>
-<td>Power Operation</td>
+<td>powerOperation</td>
 <td>Determine power operation for FloBle Plus. The affects how startReader and stopReader control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.</td>
 </tr>
 <tr>
-<td>Transmit Power</td>
+<td>transmitPower</td>
 <td>Control the power of the NFC polling on the FloBle Plus.</td>
 </tr>
 <tr>
-<td>Allow Multiconnect</td>
+<td>allowMulticonnect</td>
 <td>Control whether multiple FloBle devices can connect simultaneously</td>
+</tr>
+<tr>
+<td>specificDeviceUuid</td>
+<td>Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when &lsquo;Allow Multiconnect&rsquo; = @0.</td>
 </tr>
 </tbody></table>
 
 <h2 id="listen-for-reader-events">Listen for Reader Events</h2>
 <pre class="highlight objective_c"><code>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTagWithUuid</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Uuid</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="nf">withAtr</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Atr</span> <span class="nf">withError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">{</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span><span class="p">{</span>
     <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
         <span class="c1">//Use the main queue if the UI must be updated with the tag UUID or the deviceId
-</span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found tag UUID: %@ from device:%@"</span><span class="p">,</span><span class="n">Uuid</span><span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
+</span>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found tag UUID: %@ with ATR: %@ from device:%@"</span><span class="p">,</span><span class="n">tag</span><span class="p">.</span><span class="n">uuid</span><span class="p">,</span> <span class="n">tag</span><span class="p">.</span><span class="n">atr</span><span class="p">,</span> <span class="n">deviceUuid</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">readData</span><span class="p">];</span>
     <span class="p">});</span>
+  <span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">readData</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">currentPage</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">currentPage</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">currentPage</span> <span class="o">&lt;</span> <span class="mi">16</span> <span class="p">;</span> <span class="n">currentPage</span><span class="o">+=</span><span class="mi">4</span><span class="p">){</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">apdu</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span> <span class="s">@"FF B0 00 %02X 10"</span><span class="p">,</span><span class="n">currentPage</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">flomioMW</span> <span class="nf">sendApdu</span><span class="p">:</span><span class="n">apdu</span>  <span class="nf">toDevice</span><span class="p">:</span><span class="n">_deviceUuid</span> <span class="n">success</span><span class="o">:^</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">[</span><span class="n">response</span> <span class="nf">stringByReplacingOccurrencesOfString</span><span class="p">:</span><span class="s">@"90 00"</span> <span class="nf">withString</span><span class="p">:</span><span class="s">@""</span><span class="p">];</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"command: %@, response: %@"</span><span class="p">,</span> <span class="n">apdu</span><span class="p">,</span> <span class="n">response</span><span class="p">);</span>
+        <span class="p">}];</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTagWithData</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">payload</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="nf">withAtr</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">Atr</span> <span class="nf">withError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">{</span>
-    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
-        <span class="c1">//Use the main queue if the UI must be updated with the tag data or the deviceId
-</span>        <span class="k">if</span> <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Raw Data"</span><span class="p">]){</span>
-            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found raw data: %@ from device:%@"</span><span class="p">,</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Raw Data"</span><span class="p">]</span> <span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Ndef"</span><span class="p">])</span> <span class="p">{</span>
-            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Found Ndef Message: %@ from device:%@"</span><span class="p">,</span><span class="n">payload</span><span class="p">[</span><span class="s">@"Ndef"</span><span class="p">]</span> <span class="p">,</span><span class="n">deviceId</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didReceiveReaderError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span> <span class="p">{</span>
-    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span> <span class="c1">// Second dispatch message to log tag and restore screen
-</span>       <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span> <span class="c1">//Reader error
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didReceiveReaderError</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span> <span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span> 
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span><span class="n">error</span><span class="p">);</span> <span class="c1">//Reader error
 </span>    <span class="p">});</span>
 <span class="p">}</span>
 
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didUpdateConnectedDevices</span><span class="p">:(</span><span class="n">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">connectedDevices</span> <span class="p">{</span>
-    <span class="c1">//The list of connected devices was updated
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didChangeCardStatus</span><span class="o">:</span><span class="p">(</span><span class="n">CardStatus</span><span class="p">)</span><span class="n">status</span> <span class="n">fromDevice</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceUuid</span><span class="p">{</span>
+    <span class="c1">// 0:kNotPresent
+</span>    <span class="c1">// 1:kPresent
 </span><span class="p">}</span>
 
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeCardStatus</span><span class="p">:(</span><span class="n">CardStatus</span><span class="p">)</span><span class="nv">status</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceId</span> <span class="p">{</span>
-     <span class="c1">//The card status has entered or left the scan range of the reader
-</span>    <span class="c1">// Cardstatus:
-</span>    <span class="c1">// 0:kNotPresent
-</span>    <span class="c1">// 1:kPresent
-</span>    <span class="c1">// 2:kReadingData
-</span><span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didChangeStatus</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceUuid</span> <span class="n">withConfiguration</span><span class="o">:</span><span class="p">(</span><span class="n">FmConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="n">configuration</span> <span class="n">andBatteryLevel</span><span class="o">:</span><span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="n">batteryLevel</span> <span class="n">andCommunicationStatus</span><span class="o">:</span><span class="p">(</span><span class="n">CommunicationStatus</span><span class="p">)</span><span class="n">communicationStatus</span> <span class="n">withFirmwareRevision</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">firmwareRev</span> <span class="n">withHardwareRevision</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">hardwareRev</span><span class="p">{</span>
+    <span class="n">_deviceId</span> <span class="o">=</span> <span class="n">deviceUuid</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didGetLicenseInfo</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">deviceUuid</span> <span class="n">withStatus</span><span class="o">:</span><span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isRegistered</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">status</span><span class="p">){</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"Device: %@ is not registered"</span><span class="p">,</span> <span class="n">deviceUuidString</span><span class="p">];);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 </code></pre><pre class="highlight swift"><code>
-<span class="kd">func</span> <span class="nf">didFindTag</span><span class="p">(</span><span class="n">withUuid</span> <span class="kt">Uuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withAtr</span> <span class="kt">Atr</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="k">let</span> <span class="nv">thisUuid</span> <span class="o">=</span> <span class="kt">Uuid</span><span class="p">,</span> <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">thisUuid</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span> <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span> <span class="p">{</span>
                 <span class="nf">print</span><span class="p">(</span><span class="s">"Did find UUID: </span><span class="se">\(</span><span class="n">thisUuid</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+                <span class="k">self</span><span class="o">.</span><span class="nf">readData</span><span class="p">()</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">didFindTag</span><span class="p">(</span><span class="n">withData</span> <span class="nv">payload</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withAtr</span> <span class="kt">Atr</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">thisDeviceId</span> <span class="o">=</span> <span class="n">deviceId</span>
-        <span class="k">if</span> <span class="k">let</span> <span class="nv">thisPayload</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s">"Raw Data"</span><span class="p">]</span> <span class="p">{</span>
-            <span class="nf">print</span><span class="p">(</span><span class="s">"Did find payload: </span><span class="se">\(</span><span class="n">thisPayload</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">ndef</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s">"Ndef"</span><span class="p">]</span> <span class="p">{</span>
-            <span class="nf">print</span><span class="p">(</span><span class="s">"Did find payload: </span><span class="se">\(</span><span class="n">ndef</span><span class="se">)</span><span class="s"> from Device: </span><span class="se">\(</span><span class="n">thisDeviceId</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
-        <span class="p">}</span> 
+    <span class="kd">func</span> <span class="nf">readData</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">currentPage</span> <span class="k">in</span> <span class="nf">stride</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="nv">by</span><span class="p">:</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">st</span> <span class="o">=</span> <span class="kt">String</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span><span class="s">"%02X"</span><span class="p">,</span> <span class="n">currentPage</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">apdu</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"FF B0 00 </span><span class="se">\(</span><span class="n">st</span><span class="se">)</span><span class="s"> 10"</span>
+            <span class="n">flomioMW</span><span class="o">.</span><span class="nf">sendApdu</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="nv">toDevice</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">deviceUuid</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="k">in</span>
+                <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="k">let</span> <span class="nv">thisResponse</span> <span class="o">=</span> <span class="n">response</span> <span class="p">{</span>
+                        <span class="nf">print</span><span class="p">(</span><span class="s">"Response: </span><span class="se">\(</span><span class="n">thisResponse</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">didUpdateConnectedDevices</span><span class="p">(</span><span class="n">_</span> <span class="nv">devices</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//The list of connected devices was updated</span>
-<span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">didChangeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">with</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">FmConfiguration</span><span class="o">!</span><span class="p">,</span> <span class="n">andBatteryLevel</span> <span class="nv">batteryLevel</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="o">!</span><span class="p">,</span> <span class="n">andCommunicationStatus</span> <span class="nv">communicationStatus</span><span class="p">:</span> <span class="kt">CommunicationStatus</span><span class="p">,</span> <span class="n">withFirmwareRevision</span> <span class="nv">firmwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withHardwareRevision</span> <span class="nv">hardwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">thisDeviceUuid</span> <span class="o">=</span> <span class="n">deviceUuid</span> <span class="p">{</span>
+                <span class="k">self</span><span class="o">.</span><span class="n">deviceUuid</span> <span class="o">=</span> <span class="n">deviceUuid</span><span class="p">;</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"Device: </span><span class="se">\(</span><span class="n">thisDeviceUuid</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">didChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">CardStatus</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">device</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">didGetLicenseInfo</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withStatus</span> <span class="nv">isRegistered</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">thisDeviceUuid</span> <span class="o">=</span> <span class="n">deviceUuid</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="s">"Device: </span><span class="se">\(</span><span class="n">thisDeviceUuid</span><span class="se">)</span><span class="s"> Registered: </span><span class="se">\(</span><span class="n">isRegistered</span><span class="o">.</span><span class="n">description</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">didChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">CardStatus</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">device</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//  DispatchQueue.main.async {</span>
         <span class="c1">//The card status has entered or left the scan range of the reader</span>
         <span class="c1">// Cardstatus:</span>
         <span class="c1">// 0:CardStatus.notPresent</span>
         <span class="c1">// 1:CardStatus.present</span>
-        <span class="c1">// 2:CardStatus.readingData</span>
+    <span class="c1">//   }</span>
     <span class="p">}</span>
-<span class="p">}</span>
 
-<span class="kd">func</span> <span class="nf">didReceiveReaderError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="s">"Error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="kd">func</span> <span class="nf">didReceiveReaderError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span>
 </code></pre>
 <p>Add the FlomioSessionManager delegates to receive scan events and reader status changes. First you need to indicate that you will conform to the FmSessionManagerDelegate and then add the delegate methods.</p>
 
@@ -384,41 +398,25 @@ add <code class="prettyprint">ViewController-Bridging-Header.h</code></p></li>
 </tr>
 </thead><tbody>
 <tr>
-<td>didFindTagWithUuid(uuid) withAtr(atr)</td>
-<td>Tag has been detected by the reader while in Reader State:Read UUID mode</td>
+<td>didFindTag</td>
+<td>Tag has been detected by the reader</td>
 </tr>
 <tr>
-<td>didFindTagWithData withAtr(atr)</td>
-<td>Tag has been detected by the reader while in Reader State:Read Data mode</td>
+<td>didChangeStatus</td>
+<td>Returns readers current status along with other reader info</td>
 </tr>
 <tr>
-<td>didChangeStatus fromDevice(deviceId)</td>
-<td>Reader has changed it&rsquo;s status: battery or tag status.</td>
+<td>didGetLicenseInfo</td>
+<td>When using basic SDK, this connected displays whether the reader is licensed</td>
+</tr>
+<tr>
+<td>didChangeCardStatus</td>
+<td>Displays when a tag has entered/left the readers range</td>
 </tr>
 </tbody></table>
 
-<h2 id="start-stop-the-reader">Start/Stop the Reader</h2>
-<pre class="highlight objective_c"><code>
-<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">active</span> <span class="p">{</span>
-  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Activated"</span><span class="p">);</span>
-  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">startReaders</span><span class="p">];</span>
-<span class="p">}</span>
+<h2 id="start-stop-readers">Start/Stop Readers</h2>
 
-<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">inactive</span> <span class="p">{</span>
-  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"App Inactive"</span><span class="p">);</span>
-  <span class="p">[</span><span class="n">readerManager</span> <span class="nf">stopReaders</span><span class="p">];</span> 
-  <span class="c1">// or 
-</span>  <span class="c1">// [readerManager sleepReaders]; 
-</span><span class="p">}</span>
-</code></pre><pre class="highlight swift"><code>
-<span class="kd">func</span> <span class="nf">inactive</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="s">"App Inactive"</span><span class="p">)</span>
-    <span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">active</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="s">"App Activated"</span><span class="p">)</span>
-    <span class="p">}</span>
-</code></pre>
 <p>The Flomio SDK provides an interface to start and stop the reader activity. These can be used when your app goes into the background or the user navigates to a screen when scanning should not be enabled. </p>
 
 <h3 id="methods">Methods</h3>

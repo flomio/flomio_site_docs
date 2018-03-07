@@ -42,9 +42,24 @@ You can now register to [download the Flomio Test app](https://flomio-mw.herokua
 
 You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio madulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. 
 
-## Download the Libraries
+## Download the Framework
 
-[Download the latest Flomio SDK](https://www.dropbox.com/s/y5qloadwievtjp4/FlomioSDK.zip?dl=1) and unzip it. 
+[Download the latest Flomio SDK](https://github.com/flomio/flomio_mw_releases/releases) and unzip it. 
+
+## Build the Example App
+
+Example iOS projects can be seen on the [flomio_mw_releases](https://github.com/flomio/flomio_mw_releases) repo. 
+
+## Cocoapods and Carthage 
+
+To use the FlomioSDK with Cocoapods, follow the instructions from the [flomio_mw_releases](https://github.com/flomio/flomio_mw_releases) repo.
+
+You can also manage your project's FlomioSDK dependency using Carthage. 
+
+Follow [these instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) to get setup.
+
+Add `github "https://github.com/flomio/flomio_mw_releases"` to your Cartfile before running `carthage update`.
+You will still need to configure your project settings by following the steps in the [Configure Project Settings](#configure-project-settings) section.
 
 # iOS Integration
 
@@ -52,43 +67,35 @@ Our iOS libraries let you easily collect your customers/items tag information in
 
 ## Configure Project Settings
 
-<aside class="notice">
-Steps 6 and 7 are for Swift developers only. The rest are for everybody! :)
-</aside>
-
-1. Drag+drop the "iOS" folder on project in Xcode navigator.
+1. Drag+drop the FlomioSDK.framework file into your Xcode Project.
 Make sure the "Copy items if needed" option is selected 
 and click "Create groups" and "Finish" in dialog.
+It will be added to "Linked Frameworks and Libraries" section in project settings.
 
-2. You must configure your application with the following settings.  
+2. `In Targets -> YourAppTarget -> General -> Embedded Binaries, add the FlomioSDK`
+
+3. You must configure your application with the following settings.  
 Click the Project Navigator (on the left), then click the
 application name under TARGET. `In Targets -> YourAppTarget -> Build Settings 
 -> Linking -> Other Linker Flags add ‘-lc++’ and ’-ObjC’`
 
-3. `In Targets -> YourAppTarget -> Build Options 
+4. `In Targets -> YourAppTarget -> Build Options 
 -> Enable Bitcode set to ‘No’`
 
-4. (optional) `In Target -> Build Settings
--> Apple LLVM 9.0-Preprocessing -> Preprocessor Macros add ‘DEBUGLOG’`
-
-5. `In Targets -> YourAppTarget -> General
+5. `In Targets -> YourAppTarget -> Build Phases
 -> Link Binary with Libraries, add MediaPlayer.Framework and libz.tbd`
 
-6. For Swift Developers: Add a bridge header file: `File -> New > File... > Header File`
-and name it ViewController-Bridging-Header.h
-
-7. For Swift Developers: `In Targets -> YourAppTarget -> Build Options
--> Swift Compiler - General -> Objective-C Bridging Header`,
-add `ViewController-Bridging-Header.h`
-
-**Note:** Since we don’t support testing the SDK via the iOS Simulator we don’t compile the library for i386 and x86_64 target architectures.</p>
+6. (optional) `In Target -> Build Settings
+-> Apple LLVM 9.0-Preprocessing -> Preprocessor Macros add ‘DEBUGLOG’`
 
 ## Initialize the Flomio SDK
+
+See [FmConfiguration](#fmconfiguration) for more information on the configuration.
 
 ```objective_c
     ------------------------------------------
     // in YourViewController.h, add this to viewDidLoad
-    #import "FmSessionManager.h"
+    #import <FlomioSDK/FlomioSDK.h>
     
     @interface ViewController : UIViewController <FmSessionManagerDelegate> {  
         NSString *_deviceUuid;
@@ -100,199 +107,241 @@ add `ViewController-Bridging-Header.h`
     ------------------------------------------
     // in YourViewController.m, add this to viewDidLoad
     - (void)viewDidLoad {
-      FmConfiguration *defaultConfiguration = [[FmConfiguration alloc] init];
-          defaultConfiguration.deviceType = kFloBlePlus;
-          defaultConfiguration.transmitPower = kHighPower;
-          defaultConfiguration.scanSound = @YES;
-          defaultConfiguration.scanPeriod = @1000;
-          defaultConfiguration.powerOperation = kAutoPollingControl; //, kBluetoothConnectionControl for low power usage
-          defaultConfiguration.transmitPower = kHighPower;
-          defaultConfiguration.allowMultiConnect = @NO;
-          defaultConfiguration.specificDeviceUuid = nil; //@"RR330-000120";
-          flomioMW = [[FmSessionManager flomioMW] initWithConfiguration:defaultConfiguration];
-          flomioMW.delegate = self;
-    
+        FmConfiguration *defaultConfiguration = [[FmConfiguration alloc] init];
+        defaultConfiguration.deviceType = kFloBlePlus;
+        defaultConfiguration.scanSound = @YES;
+        defaultConfiguration.scanPeriod = @1000;
+        defaultConfiguration.powerOperation = kAutoPollingControl;
+        defaultConfiguration.transmitPower = kHighPower;
+        defaultConfiguration.allowMultiConnect = @NO;
+        defaultConfiguration.specificDeviceUuid = nil;
+        flomioMW = [[FmSessionManager flomioMW] initWithConfiguration:defaultConfiguration];
+        flomioMW.delegate = self;
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inactive) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(active) name:UIApplicationDidBecomeActiveNotification object:nil];
-          
-
+       
 ```
 
-```swift
-    ------------------------------------------
-    // in ViewController-Bridging-Header.h, add
-    #import "FmSessionManager.h"
-    
-    
-    ------------------------------------------
-    // in ViewController.swift, add
+```swift    
+
+    import FlomioSDK
     
     class ViewController: UIViewController, FmSessionManagerDelegate {
     
-      var flomioMW : FmSessionManager = FmSessionManager()
-      var deviceUuid = ""
-
-      override func viewDidLoad() {
-          super.viewDidLoad()
+        var flomioMW : FmSessionManager = FmSessionManager()
+        var deviceUuid = ""
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
               
-          let defaultConfiguration: FmConfiguration = FmConfiguration();
-          defaultConfiguration.deviceType = DeviceType.kFloBlePlus;
-          defaultConfiguration.transmitPower = TransmitPower.highPower;
-          defaultConfiguration.scanSound = true;
-          defaultConfiguration.scanPeriod = 1000;
-          defaultConfiguration.powerOperation = PowerOperation.autoPollingControl; //, kBluetoothConnectionControl for low power usage
-          defaultConfiguration.allowMultiConnect = false;
-          flomioMW = FmSessionManager.init(configuration: defaultConfiguration);
-          flomioMW.delegate = self; 
-      }
-      
+            let defaultConfiguration: FmConfiguration = FmConfiguration();
+            defaultConfiguration.deviceType = DeviceType.kFloBlePlus;
+            defaultConfiguration.transmitPower = TransmitPower.highPower;
+            defaultConfiguration.scanSound = true;
+            defaultConfiguration.scanPeriod = 1000;
+            defaultConfiguration.powerOperation = PowerOperation.autoPollingControl;
+            defaultConfiguration.allowMultiConnect = false;
+            flomioMW = FmSessionManager.init(configuration: defaultConfiguration);
+            flomioMW.delegate = self; 
+        }
+
     }
 
 ```
-You must first configure your settings and initialize the SDK. Add the code from your language of choice (on the right) to your app to create the readers. 
-
-Here is a description for each configuration item, some items are not relevant for some readers.
-
-Configuration item | Description
---------- | -------
-deviceType | Choose your device type, you may only use one device type at a time.
-scanSound | Hear notifications from Flojack MSR.
-scanPeriod | Period of polling for Audiojack readers.
-powerOperation | Determine power operation for FloBle Plus. The affects how startReader and stopReader control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.
-transmitPower | Control the power of the NFC polling on the FloBle Plus.
-allowMulticonnect | Control whether multiple FloBle devices can connect simultaneously 
-specificDeviceUuid | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
 
 ## Listen for Reader Events
 
+See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more information on the delegate methods.
+
 ```objective_c
 
-- (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUuid{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //Use the main queue if the UI must be updated with the tag UUID or the deviceId
-        NSLog(@"Found tag UUID: %@ with ATR: %@ from device:%@",tag.uuid, tag.atr, deviceUuid);
-        [self readData];
-    });
-  }
-  
-- (void)readData {
-    int currentPage = 0;
-    for (currentPage = 4; currentPage < 16 ; currentPage+=4){
-        NSString *apdu = [NSString stringWithFormat: @"FF B0 00 %02X 10",currentPage];
-        [flomioMW sendApdu:apdu  toDevice:_deviceUuid success:^(NSString *response) {
-            response = [response stringByReplacingOccurrencesOfString:@"90 00" withString:@""];
-            NSLog(@"command: %@, response: %@", apdu, response);
+    - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUuid{
+        [flomioMW readNdef:deviceUuid success:^(NdefMessage *ndef) {
+            if (ndef.ndefRecords) {
+                for (NdefRecord *record in ndef.ndefRecords) {
+                    if (record.url.absoluteString.length > 0){
+                        // if there is a URL present in your tag, it will be here
+                    }
+                }
+            }
         }];
     }
-}
-
-- (void)didReceiveReaderError:(NSError *)error {
-    dispatch_async(dispatch_get_main_queue(), ^{ 
-        NSLog(@"%@",error); //Reader error
-    });
-}
-
-- (void)didChangeCardStatus:(CardStatus)status fromDevice:(NSString *)deviceUuid{
-    // 0:kNotPresent
-    // 1:kPresent
-}
-
-- (void)didChangeStatus:(NSString *)deviceUuid withConfiguration:(FmConfiguration *)configuration andBatteryLevel:(NSNumber *)batteryLevel andCommunicationStatus:(CommunicationStatus)communicationStatus withFirmwareRevision:(NSString *)firmwareRev withHardwareRevision:(NSString *)hardwareRev{
-    _deviceId = deviceUuid;
-}
-
-- (void)didGetLicenseInfo:(NSString *)deviceUuid withStatus:(BOOL)isRegistered{
-    if (!status){
-        NSLog(@"%@",[NSString stringWithFormat:@"Device: %@ is not registered", deviceUuidString];);
+    
+    - (void)didReceiveReaderError:(NSError *)error {
+    
     }
-}
+    
+    - (void)didChangeCardStatus:(CardStatus)status fromDevice:(NSString *)deviceUuid{
+    
+    }
+    
+    - (void)didChangeStatus:(NSString *)deviceUuid withConfiguration:(FmConfiguration *)configuration andBatteryLevel:(NSNumber *)batteryLevel andCommunicationStatus:(CommunicationStatus)communicationStatus withFirmwareRevision:(NSString *)firmwareRev withHardwareRevision:(NSString *)hardwareRev{
+    }
+    
+    - (void)didGetLicenseInfo:(NSString *)deviceUuid withStatus:(BOOL)isRegistered{
+    
+    }
 
 ```
 
 ```swift
 
     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
-        DispatchQueue.main.async {
-            if let thisUuid = tag.uuid, let thisDeviceId = deviceId {
-                print("Did find UUID: \(thisUuid) from Device: \(thisDeviceId)")
-                self.readData()
-            }
-        }
-    }
-    
-    func readData() {
-        for currentPage in stride(from: 4, to: 16, by: 4) {
-            let st = String(format:"%02X", currentPage)
-            let apdu: String = "FF B0 00 \(st) 10"
-            flomioMW.sendApdu(apdu, toDevice: self.deviceUuid) { (response) in
-                DispatchQueue.main.async {
-                    if let thisResponse = response {
-                        print("Response: \(thisResponse)")
-                    }
-                }
+        self.flomioMW.readNdef(deviceId) { (ndefMessage) in
+            guard let ndefRecords = ndefMessage?.ndefRecords else { return }
+            for case let record as NdefRecord in ndefRecords {
+               for case let record as NdefRecord in ndefRecords {
+                   guard let url = record.url else { return }
+                   // if there is a URL present in your tag, it will be here
+               }
             }
         }
     }
     
     func didChangeStatus(_ deviceUuid: String!, with configuration: FmConfiguration!, andBatteryLevel batteryLevel: NSNumber!, andCommunicationStatus communicationStatus: CommunicationStatus, withFirmwareRevision firmwareRev: String!, withHardwareRevision hardwareRev: String!) {
-        DispatchQueue.main.async {
-            if let thisDeviceUuid = deviceUuid {
-                self.deviceUuid = deviceUuid;
-                print("Device: \(thisDeviceUuid)")
-            }
-        }
+   
     }
 
     func didGetLicenseInfo(_ deviceUuid: String!, withStatus isRegistered: Bool) {
-        DispatchQueue.main.async {
-            if let thisDeviceUuid = deviceUuid {
-                print("Device: \(thisDeviceUuid) Registered: \(isRegistered.description)")
-            }
-        }
+    
     }
     
     func didChange(_ status: CardStatus, fromDevice device: String!) {
-    //  DispatchQueue.main.async {
-        //The card status has entered or left the scan range of the reader
-        // Cardstatus:
-        // 0:CardStatus.notPresent
-        // 1:CardStatus.present
-    //   }
+ 
     }
     
     func didReceiveReaderError(_ error: Error!) {
-        DispatchQueue.main.async {
-            print("Error: \(error)")
-        }
+
     }
 ```
 
-Add the FlomioSessionManager delegates to receive scan events and reader status changes. First you need to indicate that you will conform to the FmSessionManagerDelegate and then add the delegate methods.
+# Classes and Methods
 
-### Delegates
+## FmSessionManagerDelegate
+
+Add FmSessionManagerDelegate to receive scan events and reader status changes.
+
+Here is a quick summary of the notifications your app will receive from the Flomio SDK. 
+
+ Delegate Method | Description
+--------- | -------
+didFindTag | Returns a [FmTag](#fmtag) object when a tag has been detected from the reader
+didChangeStatus | Returns readers [CommunicationStatus](#communicationstatus) along with other reader info
+didGetLicenseInfo | When using the basic SDK, this connected displays whether the reader is licensed
+didChangeCardStatus | Returns a [CardStatus](#cardstatus) object when a tag has entered/left the readers range
+didReceiveReaderError | Returns an error if there is a problem with the device
+
+## FmSessionManager
+
+ Method | Parameters | Description
+--------- | ------- | -------
+startReaders | | Enable paired or connected readers to begin polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
+stopReaders  | | Disable paired or connected readers from polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
+sleepReaders | | Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60seconds.
+sendApdu toDevice success | APDU String, deviceId: String, completionBlock | Send an APDU using your connected device.
+readNdef success | deviceId: String, completionBlock | Retrieve NDEF formatted data from a tag in proximity of a specified target device.
+updateCeNdef withDeviceUuid | ndef: [NdefMessage](#ndefmessage), deviceId: String | Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when [FmConfiguration](#fmconfiguration)'s isCeMode is true.
+
+## FmConfiguration
+
+You must first configure your settings and initialize the SDK. 
+
+Here is a description for each configuration item, some items are not relevant for some readers.
+
+ FmConfiguration | Type | Description
+--------- | -------  | -------
+deviceType | [DeviceType](#devicetype) | Choose your device type, you may only use one device type at a time.
+scanSound | Boolean | Hear notifications from Flojack MSR.
+scanPeriod | Number |  Period of polling for Audiojack readers (ms).
+powerOperation | [PowerOperation](#poweroperation) | Determine power operation for FloBle Plus. The affects how [startReader](#fmsessionmanager) and [stopReader](#fmsessionmanager) control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.
+transmitPower | [TransmitPower](#transmitpower) | Control the power of the NFC polling on the FloBle Plus.
+allowMulticonnect | Boolean |  Control whether multiple FloBLE devices can connect simultaneously.
+specificDeviceUuid | String | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
+isCeMode | Boolean | Activates Card Emulation mode on FloBLE Plus
+
+**Note:** Booleans listed are NSNumber initialized with Booleans. Use @YES/@No in Objective-C and true/false in Swift
+
+## FmTag
+
+This is returned when a tag is tapped from the didFindTag:tag fromDevice:deviceId delegate method on [FmSessionManagerDelegate](#fmsessionmanagerdelegate)
+
+ FmTag | Type | Description
+--------- | ------- | -------
+atr | String | The ATR can be used to determine the type of tag.
+uuid | String | The Unique Identifier of the tag.
+
+## NdefMessage
+ `Array`
+
+Represents an NDEF (NFC Data Exchange Format) data message that contains one or more [NdefRecords](#ndefrecord).
+
+## NdefRecord
+ `Object`
+
+Represents a NDEF (NFC Data Exchange Format) record as defined by the NDEF specification.
+
+| Name | Type   | Description |
+| --- | --- | --- |
+| tnf | Number | The Type Name Format field of the payload. |
+| type | Data | The type of the payload. |
+| id | Data | The identifier of the payload |
+| payload | Data  | The data of the payload |
+| url | URL? | An optional convenience parameter which will return the payload as a URI for URI records. |
+
+
+## DeviceType
+ `enum`
+
+ Name | Type       | Default | Description |
+| --- | --- | --- | --- |
+| kFlojackBzr | Number | `1` | FloJack BZR |
+| kFlojackMsr | Number | `2` | FloJack MSR |
+| kFloBleEmv | Number | `3` | FloBLE EMV |
+| kFloBlePlus | Number | `4` | FloBLE Plus |
+| uGrokit | Number | `5` | uGrokit |
+
+## PowerOperation
+ `enum`
  
- Here is a quick summary of the notifications your app will receive from the Flomio SDK. 
+ Parameter of [FmConfiguration](#fmconfiguration) for configuring the power of FloBLE Plus.
 
- Delegate | Description
---------- | -------
-didFindTag | Tag has been detected by the reader
-didChangeStatus | Returns readers current status along with other reader info
-didGetLicenseInfo | When using basic SDK, this connected displays whether the reader is licensed
-didChangeCardStatus | Displays when a tag has entered/left the readers range
+ Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| AutoPollingControl | Number | `0` | startReaders and stopReaders turns on/off the reader from polling. |
+| BluetoothConnectionControl | Number | `1` | startReaders and stopReaders turns on/off bluetooth, this can be used when exiting from/returning to your app. |
 
-## Start/Stop Readers
 
-The Flomio SDK provides an interface to start and stop the reader activity. These can be used when your app goes into the background or the user navigates to a screen when scanning should not be enabled. 
+## CommunicationStatus
+ `enum`
+ 
+ This is returned when there is a status update from the didChangeStatus delegate method on [FmSessionManagerDelegate](#fmsessionmanagerdelegate)
 
-### Methods
+ Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| Scanning | Number | `0` | The device is connected and scanning for tags. |
+| Connected | Number | `1` | The device is connected to bluetooth but not scanning for tags. |
+| Disconnected | Number | `2` | The device is disconnected from bluetooth and not scanning for tags. |
 
- Method | Description
---------- | -------
-startReaders | Enable paired or connected readers to begin polling for tags. This method will reinitialize reader if needed. 
-stopReaders  | Disable paired or connected readers from polling for tags.
-sleepReaders | Place paired or connected readers in low power mode. This can mean different things depending on "Power Operation" setting.
+## CardStatus
+ `enum`
+ 
+ This is returned when when a tag has entered/left the readers range from the didChangeCardStatus delegate method on [FmSessionManagerDelegate](#fmsessionmanagerdelegate)
+
+ Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| NotPresent | Number | `0` | A tag is not in range of the reader |
+| Present | Number | `1` | A tag is in range of the reader. |
+
+## TransmitPower
+ `enum`
+ 
+  Parameter of [FmConfiguration](#fmconfiguration) Used to determine the strength of the FloBLE Plus's transmit power.
+
+ Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| VeryLowPower | Number | `0` | Lowest power setting |
+| LowPower | Number | `1` |  |
+| MediumPower | Number | `2` |  |
+| HighPower | Number | `3` | Highest power setting |
 
 # Android Integration
 
@@ -352,6 +401,6 @@ Q | A
 What's the difference between the Basic SDK and the Pro SDK? | The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you're always guaranteed a good result. 
 
 
-# Get Help
+#
 
 Please visit [the forums](https://flomio.com/forums/forum/ask-the-flomies/) for help and to see previous questions.

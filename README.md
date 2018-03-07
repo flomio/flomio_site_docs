@@ -18,7 +18,7 @@ You're going to need:
 ### Editing site
 
 1. Add yourself as a contributor to this project.
-2. Clone to your hard drive with `git clone https://github.com/flomio/flomio_site_docs.git`
+2. Clone it with `git clone https://github.com/flomio/flomio_site_docs.git`
 3. `cd flomio_site_docs`
 4. Initialize and start Slate.
 

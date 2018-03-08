@@ -700,6 +700,45 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </tr>
 </tbody></table>
 
+<h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>Please visit <a href="https://flomio.com/forums/forum/ask-the-flomies/">the forums</a> for help and to see previous questions.</p>
+
+<h2 id="unsupported-architecture">Unsupported Architecture</h2>
+
+<p>When submitting to the App Store, if you get the Error <code class="prettyprint">ERROR ITMS-90087: Unsupported Architecture. Your executable contains unsupported architecture &#39;[x86_64, i386]&#39;.&quot;</code>
+ Add a Run Script step to your build steps, put it after your step to embed frameworks, set it to use <code class="prettyprint">/bin/sh</code> and enter the following script:</p>
+<pre class="highlight shell"><code> <span class="nv">APP_PATH</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">TARGET_BUILD_DIR</span><span class="k">}</span><span class="s2">/</span><span class="k">${</span><span class="nv">WRAPPER_NAME</span><span class="k">}</span><span class="s2">"</span>
+
+ <span class="c"># This script loops through the frameworks embedded in the application and</span>
+ <span class="c"># removes unused architectures.</span>
+ find <span class="s2">"</span><span class="nv">$APP_PATH</span><span class="s2">"</span> -name <span class="s1">'*.framework'</span> -type d | <span class="k">while </span><span class="nb">read</span> -r FRAMEWORK
+ <span class="k">do
+     </span><span class="nv">FRAMEWORK_EXECUTABLE_NAME</span><span class="o">=</span><span class="k">$(</span>defaults <span class="nb">read</span> <span class="s2">"</span><span class="nv">$FRAMEWORK</span><span class="s2">/Info.plist"</span> CFBundleExecutable<span class="k">)</span>
+     <span class="nv">FRAMEWORK_EXECUTABLE_PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$FRAMEWORK</span><span class="s2">/</span><span class="nv">$FRAMEWORK_EXECUTABLE_NAME</span><span class="s2">"</span>
+     <span class="nb">echo</span> <span class="s2">"Executable is </span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">"</span>
+
+     <span class="nv">EXTRACTED_ARCHS</span><span class="o">=()</span>
+
+     <span class="k">for </span>ARCH <span class="k">in</span> <span class="nv">$ARCHS</span>
+     <span class="k">do
+         </span><span class="nb">echo</span> <span class="s2">"Extracting </span><span class="nv">$ARCH</span><span class="s2"> from </span><span class="nv">$FRAMEWORK_EXECUTABLE_NAME</span><span class="s2">"</span>
+         lipo -extract <span class="s2">"</span><span class="nv">$ARCH</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">"</span> -o <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">-</span><span class="nv">$ARCH</span><span class="s2">"</span>
+         EXTRACTED_ARCHS+<span class="o">=(</span><span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">-</span><span class="nv">$ARCH</span><span class="s2">"</span><span class="o">)</span>
+     <span class="k">done
+
+     </span><span class="nb">echo</span> <span class="s2">"Merging extracted architectures: </span><span class="k">${</span><span class="nv">ARCHS</span><span class="k">}</span><span class="s2">"</span>
+     lipo -o <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">-merged"</span> -create <span class="s2">"</span><span class="k">${</span><span class="nv">EXTRACTED_ARCHS</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span>
+     rm <span class="s2">"</span><span class="k">${</span><span class="nv">EXTRACTED_ARCHS</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span>
+
+     <span class="nb">echo</span> <span class="s2">"Replacing original executable with thinned version"</span>
+     rm <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">"</span>
+     mv <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">-merged"</span> <span class="s2">"</span><span class="nv">$FRAMEWORK_EXECUTABLE_PATH</span><span class="s2">"</span>
+
+ <span class="k">done</span>
+</code></pre>
+<p>credit: <a href="http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/">Daniel Kennett</a></p>
+
 <h1 id="android-integration">Android Integration</h1>
 
 <h1 id="nfc-actions-amp-ifttt">NFC Actions &amp; IFTTT</h1>

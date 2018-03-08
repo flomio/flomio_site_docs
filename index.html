@@ -362,7 +362,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <tr>
 <td>sleepReaders</td>
 <td></td>
-<td>Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60seconds.</td>
+<td>Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60 seconds.</td>
 </tr>
 <tr>
 <td>sendApdu toDevice success</td>
@@ -463,9 +463,28 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 <h2 id="ndefmessage">NdefMessage</h2>
 
-<p><code class="prettyprint">Array</code></p>
+<p><code class="prettyprint">Object</code></p>
 
 <p>Represents an NDEF (NFC Data Exchange Format) data message that contains one or more <a href="#ndefrecord">NdefRecords</a>.</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ndefRecords</td>
+<td>Array of <a href="#ndefrecord">NdefRecords</a></td>
+<td>An array of <a href="#ndefrecord">NdefRecords</a>.</td>
+</tr>
+<tr>
+<td>error</td>
+<td>Error</td>
+<td>Will explain the reason if there was a problem reading/parsing the data on the tag.</td>
+</tr>
+</tbody></table>
 
 <h2 id="ndefrecord">NdefRecord</h2>
 

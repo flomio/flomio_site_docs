@@ -236,7 +236,7 @@ didReceiveReaderError | Returns an error if there is a problem with the device
 --------- | ------- | -------
 startReaders | | Enable paired or connected readers to begin polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
 stopReaders  | | Disable paired or connected readers from polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
-sleepReaders | | Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60seconds.
+sleepReaders | | Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60 seconds.
 sendApdu toDevice success | APDU String, deviceId: String, completionBlock | Send an APDU using your connected device.
 readNdef success | deviceId: String, completionBlock | Retrieve NDEF formatted data from a tag in proximity of a specified target device.
 updateCeNdef withDeviceUuid | ndef: [NdefMessage](#ndefmessage), deviceId: String | Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when [FmConfiguration](#fmconfiguration)'s isCeMode is true.
@@ -270,9 +270,14 @@ atr | String | The ATR can be used to determine the type of tag.
 uuid | String | The Unique Identifier of the tag.
 
 ## NdefMessage
- `Array`
+ `Object`
 
 Represents an NDEF (NFC Data Exchange Format) data message that contains one or more [NdefRecords](#ndefrecord).
+
+| Name | Type   | Description |
+| --- | --- | --- |
+| ndefRecords | Array of [NdefRecords](#ndefrecord) | An array of [NdefRecords](#ndefrecord). |
+| error | Error | Will explain the reason if there was a problem reading/parsing the data on the tag. |
 
 ## NdefRecord
  `Object`

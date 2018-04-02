@@ -149,21 +149,21 @@
 
 <h2 id="download-the-framework">Download the Framework</h2>
 
-<p><a href="https://github.com/flomio/flomio_mw_releases/releases">Download the latest Flomio SDK</a> and unzip it. </p>
+<p><a href="https://github.com/flomio/flomio-sdk-ios/releases">Download the latest Flomio SDK</a> and unzip it. </p>
 
 <h2 id="build-the-example-app">Build the Example App</h2>
 
-<p>Example iOS projects can be seen on the <a href="https://github.com/flomio/flomio_mw_releases">flomio_mw_releases</a> repo. </p>
+<p>Example iOS projects can be seen on the <a href="https://github.com/flomio/flomio-sdk-ios">flomio-sdk-ios</a> repo. </p>
 
 <h2 id="cocoapods-and-carthage">Cocoapods and Carthage</h2>
 
-<p>To use the FlomioSDK with Cocoapods, follow the instructions from the <a href="https://github.com/flomio/flomio_mw_releases">flomio_mw_releases</a> repo.</p>
+<p>To use the FlomioSDK with Cocoapods, follow the instructions from the <a href="https://github.com/flomio/flomio-sdk-ios">flomio-sdk-ios</a> repo.</p>
 
 <p>You can also manage your project&rsquo;s FlomioSDK dependency using Carthage. </p>
 
 <p>Follow <a href="https://github.com/Carthage/Carthage#adding-frameworks-to-an-application">these instructions</a> to get setup.</p>
 
-<p>Add <code class="prettyprint">github &quot;https://github.com/flomio/flomio_mw_releases&quot;</code> to your Cartfile before running <code class="prettyprint">carthage update</code>.
+<p>Add <code class="prettyprint">github &quot;https://github.com/flomio/flomio-sdk-ios&quot;</code> to your Cartfile before running <code class="prettyprint">carthage update</code>.
 You will still need to configure your project settings by following the steps in the <a href="#configure-project-settings">Configure Project Settings</a> section.</p>
 
 <h1 id="ios-integration">iOS Integration</h1>
@@ -199,7 +199,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </span>
     <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
         <span class="n">NSString</span> <span class="o">*</span><span class="n">_deviceUuid</span><span class="p">;</span>
-        <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">flomioMW</span><span class="p">;</span>
+        <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">flomioSDK</span><span class="p">;</span>
     <span class="p">}</span>   
 
     <span class="k">@end</span>
@@ -215,8 +215,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">transmitPower</span> <span class="o">=</span> <span class="n">kHighPower</span><span class="p">;</span>
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">allowMultiConnect</span> <span class="o">=</span> <span class="nb">@NO</span><span class="p">;</span>
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">specificDeviceUuid</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-        <span class="n">flomioMW</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmSessionManager</span> <span class="nf">flomioMW</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">defaultConfiguration</span><span class="p">];</span>
-        <span class="n">flomioMW</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        <span class="n">flomioSDK</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmSessionManager</span> <span class="nf">flomioMW</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">defaultConfiguration</span><span class="p">];</span>
+        <span class="n">flomioSDK</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
     <span class="p">}</span>
 
 </code></pre><pre class="highlight swift"><code>
@@ -224,7 +224,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
     <span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
-        <span class="k">var</span> <span class="nv">flomioMW</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
+        <span class="k">var</span> <span class="nv">flomioSDK</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
         <span class="k">var</span> <span class="nv">deviceUuid</span> <span class="o">=</span> <span class="s">""</span>
 
         <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
@@ -237,8 +237,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
             <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">scanPeriod</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
             <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">powerOperation</span> <span class="o">=</span> <span class="kt">PowerOperation</span><span class="o">.</span><span class="n">autoPollingControl</span><span class="p">;</span>
             <span class="n">defaultConfiguration</span><span class="o">.</span><span class="n">allowMultiConnect</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-            <span class="n">flomioMW</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="n">defaultConfiguration</span><span class="p">);</span>
-            <span class="n">flomioMW</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span> 
+            <span class="n">flomioSDK</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="n">defaultConfiguration</span><span class="p">);</span>
+            <span class="n">flomioSDK</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span><span class="p">;</span> 
         <span class="p">}</span>
 
     <span class="p">}</span>
@@ -249,7 +249,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <p>See <a href="#fmsessionmanagerdelegate">FmSessionManagerDelegate Methods</a> for more information on the delegate methods.</p>
 <pre class="highlight objective_c"><code>
     <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span><span class="p">{</span>
-        <span class="p">[</span><span class="n">flomioMW</span> <span class="nf">readNdef</span><span class="p">:</span><span class="n">deviceUuid</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">flomioSDK</span> <span class="nf">readNdef</span><span class="p">:</span><span class="n">deviceUuid</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">NdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">url</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
@@ -277,7 +277,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 </code></pre><pre class="highlight swift"><code>
     <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">flomioMW</span><span class="o">.</span><span class="nf">readNdef</span><span class="p">(</span><span class="n">deviceId</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">flomioSDK</span><span class="o">.</span><span class="nf">readNdef</span><span class="p">(</span><span class="n">deviceId</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
             <span class="k">guard</span> <span class="k">let</span> <span class="nv">ndefRecords</span> <span class="o">=</span> <span class="n">ndefMessage</span><span class="p">?</span><span class="o">.</span><span class="n">ndefRecords</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
             <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
                <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>

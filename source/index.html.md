@@ -44,21 +44,21 @@ You will need to plug in the FloJack readers into the audio jack port of your iO
 
 ## Download the Framework
 
-[Download the latest Flomio SDK](https://github.com/flomio/flomio_mw_releases/releases) and unzip it. 
+[Download the latest Flomio SDK](https://github.com/flomio/flomio-sdk-ios/releases) and unzip it. 
 
 ## Build the Example App
 
-Example iOS projects can be seen on the [flomio_mw_releases](https://github.com/flomio/flomio_mw_releases) repo. 
+Example iOS projects can be seen on the [flomio-sdk-ios](https://github.com/flomio/flomio-sdk-ios) repo. 
 
 ## Cocoapods and Carthage 
 
-To use the FlomioSDK with Cocoapods, follow the instructions from the [flomio_mw_releases](https://github.com/flomio/flomio_mw_releases) repo.
+To use the FlomioSDK with Cocoapods, follow the instructions from the [flomio-sdk-ios](https://github.com/flomio/flomio-sdk-ios) repo.
 
 You can also manage your project's FlomioSDK dependency using Carthage. 
 
 Follow [these instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) to get setup.
 
-Add `github "https://github.com/flomio/flomio_mw_releases"` to your Cartfile before running `carthage update`.
+Add `github "https://github.com/flomio/flomio-sdk-ios"` to your Cartfile before running `carthage update`.
 You will still need to configure your project settings by following the steps in the [Configure Project Settings](#configure-project-settings) section.
 
 # iOS Integration
@@ -99,7 +99,7 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
     
     @interface ViewController : UIViewController <FmSessionManagerDelegate> {  
         NSString *_deviceUuid;
-        FmSessionManager *flomioMW;
+        FmSessionManager *flomioSDK;
     }   
     
     @end
@@ -115,8 +115,8 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
         defaultConfiguration.transmitPower = kHighPower;
         defaultConfiguration.allowMultiConnect = @NO;
         defaultConfiguration.specificDeviceUuid = nil;
-        flomioMW = [[FmSessionManager flomioMW] initWithConfiguration:defaultConfiguration];
-        flomioMW.delegate = self;
+        flomioSDK = [[FmSessionManager flomioMW] initWithConfiguration:defaultConfiguration];
+        flomioSDK.delegate = self;
     }
        
 ```
@@ -127,7 +127,7 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
     
     class ViewController: UIViewController, FmSessionManagerDelegate {
     
-        var flomioMW : FmSessionManager = FmSessionManager()
+        var flomioSDK : FmSessionManager = FmSessionManager()
         var deviceUuid = ""
         
         override func viewDidLoad() {
@@ -140,8 +140,8 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
             defaultConfiguration.scanPeriod = 1000;
             defaultConfiguration.powerOperation = PowerOperation.autoPollingControl;
             defaultConfiguration.allowMultiConnect = false;
-            flomioMW = FmSessionManager.init(configuration: defaultConfiguration);
-            flomioMW.delegate = self; 
+            flomioSDK = FmSessionManager.init(configuration: defaultConfiguration);
+            flomioSDK.delegate = self; 
         }
 
     }
@@ -155,7 +155,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```objective_c
 
     - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUuid{
-        [flomioMW readNdef:deviceUuid success:^(NdefMessage *ndef) {
+        [flomioSDK readNdef:deviceUuid success:^(NdefMessage *ndef) {
             if (ndef.ndefRecords) {
                 for (NdefRecord *record in ndef.ndefRecords) {
                     if (record.url.absoluteString.length > 0){
@@ -186,7 +186,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```swift
 
     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
-        self.flomioMW.readNdef(deviceId) { (ndefMessage) in
+        self.flomioSDK.readNdef(deviceId) { (ndefMessage) in
             guard let ndefRecords = ndefMessage?.ndefRecords else { return }
             for case let record as NdefRecord in ndefRecords {
                for case let record as NdefRecord in ndefRecords {

@@ -155,7 +155,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```objective_c
 
     - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUuid{
-        [flomioSDK readNdef:deviceUuid success:^(NdefMessage *ndef) {
+        [tag readNdef:^(NdefMessage *ndef) {
             if (ndef.ndefRecords) {
                 for (NdefRecord *record in ndef.ndefRecords) {
                     if (record.url.absoluteString.length > 0){
@@ -186,7 +186,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```swift
 
     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
-        self.flomioSDK.readNdef(deviceId) { (ndefMessage) in
+        tag.readNdef { (ndefMessage) in
             guard let ndefRecords = ndefMessage?.ndefRecords else { return }
             for case let record as NdefRecord in ndefRecords {
                for case let record as NdefRecord in ndefRecords {
@@ -238,7 +238,6 @@ startReaders | | Enable paired or connected readers to begin polling for tags. T
 stopReaders  | | Disable paired or connected readers from polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
 sleepReaders | | Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60 seconds.
 sendApdu toDevice success | APDU String, deviceId: String, completionBlock | Send an APDU using your connected device.
-readNdef success | deviceId: String, completionBlock | Retrieve NDEF formatted data from a tag in proximity of a specified target device.
 updateCeNdef withDeviceUuid | ndef: [NdefMessage](#ndefmessage), deviceId: String | Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when [FmConfiguration](#fmconfiguration)'s isCeMode is true.
 
 ## FmConfiguration
@@ -264,10 +263,19 @@ isCeMode | Boolean | Activates Card Emulation mode on FloBLE Plus
 
 This is returned when a tag is tapped from the didFindTag:tag fromDevice:deviceId delegate method on [FmSessionManagerDelegate](#fmsessionmanagerdelegate)
 
+Properties
+
  FmTag | Type | Description
 --------- | ------- | -------
 atr | String | The ATR can be used to determine the type of tag.
 uuid | String | The Unique Identifier of the tag.
+
+Methods
+
+Method | Parameters | Description
+--------- | ------- | -------
+readNdef  | completionBlock | Returns the NdefMessage read from the tag in a completion block
+writeNdef | NdefMessage, completionBlock | Pass a NDEF message to write, returns boolean to indicate whether tag was written successfully 
 
 ## NdefMessage
  `Object`

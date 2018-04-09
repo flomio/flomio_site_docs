@@ -249,7 +249,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <p>See <a href="#fmsessionmanagerdelegate">FmSessionManagerDelegate Methods</a> for more information on the delegate methods.</p>
 <pre class="highlight objective_c"><code>
     <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span><span class="p">{</span>
-        <span class="p">[</span><span class="n">flomioSDK</span> <span class="nf">readNdef</span><span class="p">:</span><span class="n">deviceUuid</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">tag</span> <span class="nf">readNdef</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">NdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">url</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
@@ -277,7 +277,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 </code></pre><pre class="highlight swift"><code>
     <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">self</span><span class="o">.</span><span class="n">flomioSDK</span><span class="o">.</span><span class="nf">readNdef</span><span class="p">(</span><span class="n">deviceId</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">readNdef</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
             <span class="k">guard</span> <span class="k">let</span> <span class="nv">ndefRecords</span> <span class="o">=</span> <span class="n">ndefMessage</span><span class="p">?</span><span class="o">.</span><span class="n">ndefRecords</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
             <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
                <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
@@ -370,11 +370,6 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>Send an APDU using your connected device.</td>
 </tr>
 <tr>
-<td>readNdef success</td>
-<td>deviceId: String, completionBlock</td>
-<td>Retrieve NDEF formatted data from a tag in proximity of a specified target device.</td>
-</tr>
-<tr>
 <td>updateCeNdef withDeviceUuid</td>
 <td>ndef: <a href="#ndefmessage">NdefMessage</a>, deviceId: String</td>
 <td>Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when <a href="#fmconfiguration">FmConfiguration</a>&rsquo;s isCeMode is true.</td>
@@ -442,6 +437,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 <p>This is returned when a tag is tapped from the didFindTag:tag fromDevice:deviceId delegate method on <a href="#fmsessionmanagerdelegate">FmSessionManagerDelegate</a></p>
 
+<p>Properties</p>
+
 <table><thead>
 <tr>
 <th>FmTag</th>
@@ -458,6 +455,27 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>uuid</td>
 <td>String</td>
 <td>The Unique Identifier of the tag.</td>
+</tr>
+</tbody></table>
+
+<p>Methods</p>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>readNdef</td>
+<td>completionBlock</td>
+<td>Returns the NdefMessage read from the tag in a completion block</td>
+</tr>
+<tr>
+<td>writeNdef</td>
+<td>NdefMessage, completionBlock</td>
+<td>Pass a NDEF message to write, returns boolean to indicate whether tag was written successfully</td>
 </tr>
 </tbody></table>
 

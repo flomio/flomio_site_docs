@@ -98,7 +98,7 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
     #import <FlomioSDK/FlomioSDK.h>
     
     @interface ViewController : UIViewController <FmSessionManagerDelegate> {  
-        NSString *_deviceUuid;
+        NSString *_deviceUid;
         FmSessionManager *flomioSDK;
     }   
     
@@ -114,7 +114,7 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
         defaultConfiguration.powerOperation = kAutoPollingControl;
         defaultConfiguration.transmitPower = kHighPower;
         defaultConfiguration.allowMultiConnect = @NO;
-        defaultConfiguration.specificDeviceUuid = nil;
+        defaultConfiguration.specificDeviceUid = nil;
         flomioSDK = [[FmSessionManager flomioMW] initWithConfiguration:defaultConfiguration];
         flomioSDK.delegate = self;
     }
@@ -128,7 +128,7 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
     class ViewController: UIViewController, FmSessionManagerDelegate {
     
         var flomioSDK : FmSessionManager = FmSessionManager()
-        var deviceUuid = ""
+        var deviceUid = ""
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -154,10 +154,10 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 
 ```objective_c
 
-    - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUuid{
-        [tag readNdef:^(NdefMessage *ndef) {
+    - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUid{
+        [tag readNdef:^(FmNdefMessage *ndef) {
             if (ndef.ndefRecords) {
-                for (NdefRecord *record in ndef.ndefRecords) {
+                for (FmNdefRecord *record in ndef.ndefRecords) {
                     if (record.url.absoluteString.length > 0){
                         // if there is a URL present in your tag, it will be here
                     }
@@ -170,14 +170,14 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
     
     }
     
-    - (void)didChangeCardStatus:(CardStatus)status fromDevice:(NSString *)deviceUuid{
+    - (void)didChangeCardStatus:(CardStatus)status fromDevice:(NSString *)deviceUid{
     
     }
     
-    - (void)didChangeStatus:(NSString *)deviceUuid withConfiguration:(FmConfiguration *)configuration andBatteryLevel:(NSNumber *)batteryLevel andCommunicationStatus:(CommunicationStatus)communicationStatus withFirmwareRevision:(NSString *)firmwareRev withHardwareRevision:(NSString *)hardwareRev{
+    - (void)didChangeStatus:(NSString *)deviceUid withConfiguration:(FmConfiguration *)configuration andBatteryLevel:(NSNumber *)batteryLevel andCommunicationStatus:(CommunicationStatus)communicationStatus withFirmwareRevision:(NSString *)firmwareRev withHardwareRevision:(NSString *)hardwareRev{
     }
     
-    - (void)didGetLicenseInfo:(NSString *)deviceUuid withStatus:(BOOL)isRegistered{
+    - (void)didGetLicenseInfo:(NSString *)deviceUid withStatus:(BOOL)isRegistered{
     
     }
 
@@ -188,8 +188,8 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
         tag.readNdef { (ndefMessage) in
             guard let ndefRecords = ndefMessage?.ndefRecords else { return }
-            for case let record as NdefRecord in ndefRecords {
-               for case let record as NdefRecord in ndefRecords {
+            for case let record as FmNdefRecord in ndefRecords {
+               for case let record as FmNdefRecord in ndefRecords {
                    guard let url = record.url else { return }
                    // if there is a URL present in your tag, it will be here
                }
@@ -197,11 +197,11 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
         }
     }
     
-    func didChangeStatus(_ deviceUuid: String!, with configuration: FmConfiguration!, andBatteryLevel batteryLevel: NSNumber!, andCommunicationStatus communicationStatus: CommunicationStatus, withFirmwareRevision firmwareRev: String!, withHardwareRevision hardwareRev: String!) {
+    func didChangeStatus(_ deviceUid: String!, with configuration: FmConfiguration!, andBatteryLevel batteryLevel: NSNumber!, andCommunicationStatus communicationStatus: CommunicationStatus, withFirmwareRevision firmwareRev: String!, withHardwareRevision hardwareRev: String!) {
    
     }
 
-    func didGetLicenseInfo(_ deviceUuid: String!, withStatus isRegistered: Bool) {
+    func didGetLicenseInfo(_ deviceUid: String!, withStatus isRegistered: Bool) {
     
     }
     
@@ -238,7 +238,7 @@ startReaders | | Enable paired or connected readers to begin polling for tags. T
 stopReaders  | | Disable paired or connected readers from polling for tags. This can mean different things depending on [PowerOperation](#poweroperation) setting.
 sleepReaders | | Put FloBLE Plus reader to sleep. This will also configure the reader to sleep after 60 seconds.
 sendApdu toDevice success | APDU String, deviceId: String, completionBlock | Send an APDU using your connected device.
-updateCeNdef withDeviceUuid | ndef: [NdefMessage](#ndefmessage), deviceId: String | Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when [FmConfiguration](#fmconfiguration)'s isCeMode is true.
+updateCeNdef withDeviceUid | ndef: [FmNdefMessage](#ndefmessage), deviceId: String | Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when [FmConfiguration](#fmconfiguration)'s isCeMode is true.
 
 ## FmConfiguration
 
@@ -254,7 +254,7 @@ scanPeriod | Number |  Period of polling for Audiojack readers (ms).
 powerOperation | [PowerOperation](#poweroperation) | Determine power operation for FloBle Plus. The affects how [startReader](#fmsessionmanager) and [stopReader](#fmsessionmanager) control your FloBle Plus, either control bluetooth for low power operation or nfc polling for standard use.
 transmitPower | [TransmitPower](#transmitpower) | Control the power of the NFC polling on the FloBle Plus.
 allowMulticonnect | Boolean |  Control whether multiple FloBLE devices can connect simultaneously.
-specificDeviceUuid | String | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
+specificDeviceUid | String | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
 isCeMode | Boolean | Activates Card Emulation mode on FloBLE Plus
 
 **Note:** Booleans listed are NSNumber initialized with Booleans. Use @YES/@No in Objective-C and true/false in Swift
@@ -268,26 +268,26 @@ Properties
  FmTag | Type | Description
 --------- | ------- | -------
 atr | String | The ATR can be used to determine the type of tag.
-uuid | String | The Unique Identifier of the tag.
+uid | String | The Unique Identifier of the tag.
 
 Methods
 
 Method | Parameters | Description
 --------- | ------- | -------
-readNdef  | completionBlock | Returns the NdefMessage read from the tag in a completion block
-writeNdef | NdefMessage, completionBlock | Pass a NDEF message to write, returns boolean to indicate whether tag was written successfully 
+readNdef  | completionBlock | Returns the FmNdefMessage read from the tag in a completion block
+writeNdef | FmNdefMessage, completionBlock | Pass a NDEF message to write, returns boolean to indicate whether tag was written successfully 
 
-## NdefMessage
+## FmNdefMessage
  `Object`
 
-Represents an NDEF (NFC Data Exchange Format) data message that contains one or more [NdefRecords](#ndefrecord).
+Represents an NDEF (NFC Data Exchange Format) data message that contains one or more [FmNdefRecords](#ndefrecord).
 
 | Name | Type   | Description |
 | --- | --- | --- |
-| ndefRecords | Array of [NdefRecords](#ndefrecord) | An array of [NdefRecords](#ndefrecord). |
+| ndefRecords | Array of [FmNdefRecord](#ndefrecord)s | An array of [FmNdefRecord](#ndefrecord)s. |
 | error | Error | Will explain the reason if there was a problem reading/parsing the data on the tag. |
 
-## NdefRecord
+## FmNdefRecord
  `Object`
 
 Represents a NDEF (NFC Data Exchange Format) record as defined by the NDEF specification.
@@ -430,7 +430,7 @@ You want to create your IFTTT Applet using Maker Webhooks to trigger your event.
 
 Go to [IFTTT Create](https://ifttt.com/create). Click "+this", search 'Maker Webhooks' and select it. Select 'Receive a web request' and name your event to, for example, 'tag_scanned'.
 
-Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. 
+Side note (optional): For more precise control, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. 
 
 Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type 'Now' into start time, click 'create' and 'finish'.   
 
@@ -440,7 +440,7 @@ Below are details of the values/'ingredients' sent with the trigger.
 
  Ingredient | Description
 --------- | -------
-Value1 |  Tag UUID
+Value1 |  Tag Uid
 Value2  | Tag Location in Google Maps
 Value3 | Tag Payload (write to tag in NFC Actions to use this)
 

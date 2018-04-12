@@ -198,7 +198,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </span>    <span class="cp">#import &lt;FlomioSDK/FlomioSDK.h&gt;
 </span>
     <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
-        <span class="n">NSString</span> <span class="o">*</span><span class="n">_deviceUuid</span><span class="p">;</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">_deviceUid</span><span class="p">;</span>
         <span class="n">FmSessionManager</span> <span class="o">*</span><span class="n">flomioSDK</span><span class="p">;</span>
     <span class="p">}</span>   
 
@@ -214,7 +214,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">powerOperation</span> <span class="o">=</span> <span class="n">kAutoPollingControl</span><span class="p">;</span>
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">transmitPower</span> <span class="o">=</span> <span class="n">kHighPower</span><span class="p">;</span>
         <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">allowMultiConnect</span> <span class="o">=</span> <span class="nb">@NO</span><span class="p">;</span>
-        <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">specificDeviceUuid</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+        <span class="n">defaultConfiguration</span><span class="p">.</span><span class="n">specificDeviceUid</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
         <span class="n">flomioSDK</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmSessionManager</span> <span class="nf">flomioMW</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">defaultConfiguration</span><span class="p">];</span>
         <span class="n">flomioSDK</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
     <span class="p">}</span>
@@ -225,7 +225,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
     <span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
         <span class="k">var</span> <span class="nv">flomioSDK</span> <span class="p">:</span> <span class="kt">FmSessionManager</span> <span class="o">=</span> <span class="kt">FmSessionManager</span><span class="p">()</span>
-        <span class="k">var</span> <span class="nv">deviceUuid</span> <span class="o">=</span> <span class="s">""</span>
+        <span class="k">var</span> <span class="nv">deviceUid</span> <span class="o">=</span> <span class="s">""</span>
 
         <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
@@ -248,10 +248,10 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 <p>See <a href="#fmsessionmanagerdelegate">FmSessionManagerDelegate Methods</a> for more information on the delegate methods.</p>
 <pre class="highlight objective_c"><code>
-    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span><span class="p">{</span>
-        <span class="p">[</span><span class="n">tag</span> <span class="nf">readNdef</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">tag</span> <span class="nf">readNdef</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">FmNdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">NdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">FmNdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">url</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
                         <span class="c1">// if there is a URL present in your tag, it will be here
 </span>                    <span class="p">}</span>
@@ -264,14 +264,14 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
     <span class="p">}</span>
 
-    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeCardStatus</span><span class="p">:(</span><span class="n">CardStatus</span><span class="p">)</span><span class="nv">status</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span><span class="p">{</span>
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeCardStatus</span><span class="p">:(</span><span class="n">CardStatus</span><span class="p">)</span><span class="nv">status</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
 
     <span class="p">}</span>
 
-    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeStatus</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span> <span class="nf">withConfiguration</span><span class="p">:(</span><span class="n">FmConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span> <span class="nf">andBatteryLevel</span><span class="p">:(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="nv">batteryLevel</span> <span class="nf">andCommunicationStatus</span><span class="p">:(</span><span class="n">CommunicationStatus</span><span class="p">)</span><span class="nv">communicationStatus</span> <span class="nf">withFirmwareRevision</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">firmwareRev</span> <span class="nf">withHardwareRevision</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">hardwareRev</span><span class="p">{</span>
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didChangeStatus</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span> <span class="nf">withConfiguration</span><span class="p">:(</span><span class="n">FmConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span> <span class="nf">andBatteryLevel</span><span class="p">:(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="nv">batteryLevel</span> <span class="nf">andCommunicationStatus</span><span class="p">:(</span><span class="n">CommunicationStatus</span><span class="p">)</span><span class="nv">communicationStatus</span> <span class="nf">withFirmwareRevision</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">firmwareRev</span> <span class="nf">withHardwareRevision</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">hardwareRev</span><span class="p">{</span>
     <span class="p">}</span>
 
-    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didGetLicenseInfo</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUuid</span> <span class="nf">withStatus</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">isRegistered</span><span class="p">{</span>
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didGetLicenseInfo</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span> <span class="nf">withStatus</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">isRegistered</span><span class="p">{</span>
 
     <span class="p">}</span>
 
@@ -279,8 +279,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
     <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">tag</span><span class="o">.</span><span class="n">readNdef</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
             <span class="k">guard</span> <span class="k">let</span> <span class="nv">ndefRecords</span> <span class="o">=</span> <span class="n">ndefMessage</span><span class="p">?</span><span class="o">.</span><span class="n">ndefRecords</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
-            <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
-               <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">NdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
+               <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
                    <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
                    <span class="c1">// if there is a URL present in your tag, it will be here</span>
                <span class="p">}</span>
@@ -288,11 +288,11 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="kd">func</span> <span class="nf">didChangeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">with</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">FmConfiguration</span><span class="o">!</span><span class="p">,</span> <span class="n">andBatteryLevel</span> <span class="nv">batteryLevel</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="o">!</span><span class="p">,</span> <span class="n">andCommunicationStatus</span> <span class="nv">communicationStatus</span><span class="p">:</span> <span class="kt">CommunicationStatus</span><span class="p">,</span> <span class="n">withFirmwareRevision</span> <span class="nv">firmwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withHardwareRevision</span> <span class="nv">hardwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">didChangeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">with</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">FmConfiguration</span><span class="o">!</span><span class="p">,</span> <span class="n">andBatteryLevel</span> <span class="nv">batteryLevel</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="o">!</span><span class="p">,</span> <span class="n">andCommunicationStatus</span> <span class="nv">communicationStatus</span><span class="p">:</span> <span class="kt">CommunicationStatus</span><span class="p">,</span> <span class="n">withFirmwareRevision</span> <span class="nv">firmwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withHardwareRevision</span> <span class="nv">hardwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="p">}</span>
 
-    <span class="kd">func</span> <span class="nf">didGetLicenseInfo</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUuid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withStatus</span> <span class="nv">isRegistered</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">didGetLicenseInfo</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withStatus</span> <span class="nv">isRegistered</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="p">}</span>
 
@@ -370,8 +370,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>Send an APDU using your connected device.</td>
 </tr>
 <tr>
-<td>updateCeNdef withDeviceUuid</td>
-<td>ndef: <a href="#ndefmessage">NdefMessage</a>, deviceId: String</td>
+<td>updateCeNdef withDeviceUid</td>
+<td>ndef: <a href="#ndefmessage">FmNdefMessage</a>, deviceId: String</td>
 <td>Configure your FloBLE Plus to emulate a tag with new NDEF data. Use when <a href="#fmconfiguration">FmConfiguration</a>&rsquo;s isCeMode is true.</td>
 </tr>
 </tbody></table>
@@ -420,7 +420,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>Control whether multiple FloBLE devices can connect simultaneously.</td>
 </tr>
 <tr>
-<td>specificDeviceUuid</td>
+<td>specificDeviceUid</td>
 <td>String</td>
 <td>Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when &lsquo;Allow Multiconnect&rsquo; = @0.</td>
 </tr>
@@ -452,7 +452,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>The ATR can be used to determine the type of tag.</td>
 </tr>
 <tr>
-<td>uuid</td>
+<td>uid</td>
 <td>String</td>
 <td>The Unique Identifier of the tag.</td>
 </tr>
@@ -470,20 +470,20 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <tr>
 <td>readNdef</td>
 <td>completionBlock</td>
-<td>Returns the NdefMessage read from the tag in a completion block</td>
+<td>Returns the FmNdefMessage read from the tag in a completion block</td>
 </tr>
 <tr>
 <td>writeNdef</td>
-<td>NdefMessage, completionBlock</td>
+<td>FmNdefMessage, completionBlock</td>
 <td>Pass a NDEF message to write, returns boolean to indicate whether tag was written successfully</td>
 </tr>
 </tbody></table>
 
-<h2 id="ndefmessage">NdefMessage</h2>
+<h2 id="fmndefmessage">FmNdefMessage</h2>
 
 <p><code class="prettyprint">Object</code></p>
 
-<p>Represents an NDEF (NFC Data Exchange Format) data message that contains one or more <a href="#ndefrecord">NdefRecords</a>.</p>
+<p>Represents an NDEF (NFC Data Exchange Format) data message that contains one or more <a href="#ndefrecord">FmNdefRecords</a>.</p>
 
 <table><thead>
 <tr>
@@ -494,8 +494,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </thead><tbody>
 <tr>
 <td>ndefRecords</td>
-<td>Array of <a href="#ndefrecord">NdefRecords</a></td>
-<td>An array of <a href="#ndefrecord">NdefRecords</a>.</td>
+<td>Array of <a href="#ndefrecord">FmNdefRecord</a>s</td>
+<td>An array of <a href="#ndefrecord">FmNdefRecord</a>s.</td>
 </tr>
 <tr>
 <td>error</td>
@@ -504,7 +504,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </tr>
 </tbody></table>
 
-<h2 id="ndefrecord">NdefRecord</h2>
+<h2 id="fmndefrecord">FmNdefRecord</h2>
 
 <p><code class="prettyprint">Object</code></p>
 
@@ -789,7 +789,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 <p>Go to <a href="https://ifttt.com/create">IFTTT Create</a>. Click &ldquo;+this&rdquo;, search &#39;Maker Webhooks&rsquo; and select it. Select &#39;Receive a web request&rsquo; and name your event to, for example, &#39;tag_scanned&rsquo;.</p>
 
-<p>Side note (optional): For more precise control, you can use the each tag UUID to trigger different events by setting the Event name to the UUID. </p>
+<p>Side note (optional): For more precise control, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. </p>
 
 <p>Now click &rsquo;+that&rsquo;, we will use iOS Calendar as an example here but you can use what you want. Click &#39;create a calendar event&rsquo;. Now configure your event to show the details of the tag scan. Type &#39;Now&rsquo; into start time, click &#39;create&rsquo; and &#39;finish&rsquo;.   </p>
 
@@ -805,7 +805,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </thead><tbody>
 <tr>
 <td>Value1</td>
-<td>Tag UUID</td>
+<td>Tag Uid</td>
 </tr>
 <tr>
 <td>Value2</td>

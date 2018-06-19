@@ -761,13 +761,6 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 </code></pre>
 <p>credit: <a href="http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/">Daniel Kennett</a></p>
 
-<h1 id="faq">FAQ</h1>
-
-<h2 id="can-i-read-and-write-ndef-data-to-tags-with-my-reader">Can I read and write NDEF data to tags with my reader?</h2>
-
-<p>We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. 
-   See <a href="#fmtag">FmTag</a> for methods to read and write NDEF data.</p>
-
 <h1 id="android-integration">Android Integration</h1>
 
 <h1 id="nfc-actions-amp-ifttt">NFC Actions &amp; IFTTT</h1>
@@ -847,6 +840,10 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <tr>
 <td>What&rsquo;s the difference between the Basic SDK and the Pro SDK?</td>
 <td>The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you&rsquo;re always guaranteed a good result.</td>
+</tr>
+<tr>
+<td>Can I read and write NDEF data to tags with my reader?</td>
+<td>We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. See <a href="#fmtag">FmTag</a> for methods to read and write NDEF data.</td>
 </tr>
 </tbody></table>
 

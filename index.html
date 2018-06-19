@@ -196,6 +196,8 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <pre class="highlight objective_c"><code>    <span class="o">------------------------------------------</span>
     <span class="c1">// in YourViewController.h, add this to viewDidLoad
 </span>    <span class="cp">#import &lt;FlomioSDK/FlomioSDK.h&gt;
+</span>    <span class="c1">// For Pro Users
+</span>    <span class="c1">// #import &lt;FlomioSDKPro/FlomioSDKPro.h&gt;
 </span>
     <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span> <span class="o">&lt;</span><span class="n">FmSessionManagerDelegate</span><span class="o">&gt;</span> <span class="p">{</span>  
         <span class="n">NSString</span> <span class="o">*</span><span class="n">_deviceUid</span><span class="p">;</span>
@@ -220,7 +222,9 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
     <span class="p">}</span>
 
 </code></pre><pre class="highlight swift"><code>
-    <span class="kd">import</span> <span class="kt">FlomioSDK</span>
+    <span class="kd">import</span> <span class="kt">FlomioSDK</span> 
+    <span class="c1">// For Pro Users</span>
+    <span class="c1">// import FlomioSDKPro</span>
 
     <span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">FmSessionManagerDelegate</span> <span class="p">{</span>
 
@@ -756,6 +760,12 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
  <span class="k">done</span>
 </code></pre>
 <p>credit: <a href="http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/">Daniel Kennett</a></p>
+
+<h1 id="faq">FAQ</h1>
+
+<p>## Can I read and write NDEF data to tags with my reader?
+   We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. 
+   See <a href="#fmtag">FmTag</a> for methods to read and write NDEF data.</p>
 
 <h1 id="android-integration">Android Integration</h1>
 

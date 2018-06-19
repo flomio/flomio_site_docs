@@ -401,13 +401,6 @@ Please visit [the forums](https://flomio.com/forums/forum/ask-the-flomies/) for 
  ```
  
  credit: [Daniel Kennett](http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/)
- 
-# FAQ
-    
-## Can I read and write NDEF data to tags with my reader?
-   
-   We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. 
-   See [FmTag](#fmtag) for methods to read and write NDEF data.
 
 # Android Integration
 
@@ -465,6 +458,7 @@ Q | A
 --------- | -------
  Can the SDK run in the background? | We don't expect Apps to ever be able operate FloJacks in the background. The FloJack requires a heartbeat handshake in order to prevent it from going into sleep mode and it's not possible to handle from background. The active/inactive methods in the ViewController are meant to wake/sleep the reader during foregrounding/backgrounding. The FloBLE products are able to operate from a backgrounded app state. Also several of the same FloBLE products can connect to the iOS device at once (max 7 connected FloBLEs at a time).
 What's the difference between the Basic SDK and the Pro SDK? | The Flomio SDK is currently sold on the per device license. That means that if you build an app with the Flomio SDK it will only work with readers that have valid licenses. Every FloJack and FloBLE reader we sell includes the Basic SDK license. This license is checked against reader device ID every time your app runs by checking our online database. That means that you need have web connectivity for the Basic SDK to work. For customers that need more flexibility, the Pro SDK is able to operate completely offline. The license is checked inside the Pro SDK bundle itself so you're always guaranteed a good result. 
+Can I read and write NDEF data to tags with my reader? | We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. See [FmTag](#fmtag) for methods to read and write NDEF data.
 
 
 #

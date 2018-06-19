@@ -96,6 +96,8 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
     ------------------------------------------
     // in YourViewController.h, add this to viewDidLoad
     #import <FlomioSDK/FlomioSDK.h>
+    // For Pro Users
+    // #import <FlomioSDKPro/FlomioSDKPro.h>
     
     @interface ViewController : UIViewController <FmSessionManagerDelegate> {  
         NSString *_deviceUid;
@@ -123,7 +125,9 @@ See [FmConfiguration](#fmconfiguration) for more information on the configuratio
 
 ```swift    
 
-    import FlomioSDK
+    import FlomioSDK 
+    // For Pro Users
+    // import FlomioSDKPro
     
     class ViewController: UIViewController, FmSessionManagerDelegate {
     
@@ -397,6 +401,13 @@ Please visit [the forums](https://flomio.com/forums/forum/ask-the-flomies/) for 
  ```
  
  credit: [Daniel Kennett](http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/)
+ 
+# FAQ
+    
+## Can I read and write NDEF data to tags with my reader?
+   
+   We recommend using the FloBLE Plus or FloBLE Noir to read and write data as the audio-jack data throughput is slow and unreliable. 
+   See [FmTag](#fmtag) for methods to read and write NDEF data.
 
 # Android Integration
 

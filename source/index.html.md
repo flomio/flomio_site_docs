@@ -90,6 +90,9 @@ application name under TARGET. `In Targets -> YourAppTarget -> Build Settings
 
 ## Initialize the Flomio SDK
 
+You should only initialize the SDK once per session. This should be called when you want to use your reader,
+after that you should use the `startReaders` and `stopReaders` methods on [FmSessionManager](#fmsessionmanager) to
+control the readers.
 See [FmConfiguration](#fmconfiguration) for more information on the configuration.
 
 ```objective_c
@@ -159,15 +162,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```objective_c
 
     - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUid{
-        [tag readNdef:^(FmNdefMessage *ndef) {
-            if (ndef.ndefRecords) {
-                for (FmNdefRecord *record in ndef.ndefRecords) {
-                    if (record.url.absoluteString.length > 0){
-                        // if there is a URL present in your tag, it will be here
-                    }
-                }
-            }
-        }];
+        
     }
     
     - (void)didReceiveReaderError:(NSError *)error {
@@ -190,15 +185,7 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 ```swift
 
     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
-        tag.readNdef { (ndefMessage) in
-            guard let ndefRecords = ndefMessage?.ndefRecords else { return }
-            for case let record as FmNdefRecord in ndefRecords {
-               for case let record as FmNdefRecord in ndefRecords {
-                   guard let url = record.url else { return }
-                   // if there is a URL present in your tag, it will be here
-               }
-            }
-        }
+        
     }
     
     func didChangeStatus(_ deviceUid: String!, with configuration: FmConfiguration!, andBatteryLevel batteryLevel: NSNumber!, andCommunicationStatus communicationStatus: CommunicationStatus, withFirmwareRevision firmwareRev: String!, withHardwareRevision hardwareRev: String!) {
@@ -217,6 +204,140 @@ See [FmSessionManagerDelegate Methods](#fmsessionmanagerdelegate) for more infor
 
     }
 ```
+
+## Reading Tags
+
+In the `didFindTagFromDevice` callback, call the `readNdef` method on the [FmTag](#fmtag) object 
+to read NDEF formatted data from your tag. Within the completion handler, iterate through the [FmNdefRecord](#fmndefrecord)s
+in the [FmNdefMessage](#fmndefmessage) to see the payload present in your tag. If there is 
+a URL, our SDK provides a convenience parameter with the URL as a string.
+
+```objective_c
+
+    - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUid{
+        [tag readNdef:^(FmNdefMessage *ndef) {
+            if (ndef.ndefRecords) {
+                for (FmNdefRecord *record in ndef.ndefRecords) {
+                    if (record.url.absoluteString.length > 0){
+                        // if there is a URL present in your tag, it will be here
+                    }
+                }
+            }
+        }];
+    }
+
+```
+
+```swift
+
+    func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
+        tag.readNdef { (ndefMessage) in
+            guard let ndefRecords = ndefMessage?.ndefRecords else { return }
+            for case let record as FmNdefRecord in ndefRecords {
+               for case let record as FmNdefRecord in ndefRecords {
+                   guard let url = record.url else { return }
+                   // if there is a URL present in your tag, it will be here
+               }
+            }
+        }
+    }
+ 
+```
+
+## Writing to Tags
+
+### Writing a Web Address to Tags
+
+In the `didFindTagFromDevice` callback, initialize a [FmNdefMessage](#fmndefmessage) with the `createURIWithString` method and use it as a parameter on `writeNdef` method
+ on the [FmTag](#fmtag) object to begin writing. The completion handler will indicate whether
+ your operation was successful. 
+ 
+ ```objective_c
+  
+      - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUid{
+          FmNdefMessage *message = [FmNdefMessage createURIWithString:@"https://flomio.com"];
+          [tag writeNdef:message success:^(BOOL success) {
+              if (success) {
+                NSLog(@"Tag written successfully");
+              }
+          }];
+      }
+  
+  ```
+  
+  ```swift
+  
+      func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
+          let ndefMessage = FmNdefMessage.createURI(with: "https://flomio.com")
+          tag.writeNdef(ndefMessage) { (success) in
+             if (success) {
+               print("Tag written successfully")
+             }
+          }
+      }
+   
+  ```
+
+### Writing Text Data to Tags
+
+In the `didFindTagFromDevice` callback, create one or more [FmNdefRecord](#fmndefrecord)s
+and initialize a [FmNdefMessage](#fmndefmessage) with them. Call the `writeNdef` method
+ on the [FmTag](#fmtag) object to begin writing. The completion handler will indicate whether
+ your operation was successful. 
+ 
+ ```objective_c
+ 
+     - (void)didFindTag:(FmTag *)tag fromDevice:(NSString *)deviceUid{
+         NSData *type = [@"text/plain" dataUsingEncoding:NSASCIIStringEncoding];
+         NSData *payload = [@"Hello World!" dataUsingEncoding:NSASCIIStringEncoding];
+         FmNdefRecord *record = [[FmNdefRecord alloc] initWithTnf:kTNFMimeMedia andType:type andId:nil andPayload: payload];
+         FmNdefMessage *message = [[FmNdefMessage alloc] initWithNdefRecords:@[record]];
+         [tag writeNdef:message success:^(BOOL success) {
+             if (success) {
+               NSLog(@"Tag written successfully");
+             }
+         }];
+     }
+ 
+ ```
+ 
+ ```swift
+ 
+     func didFind(_ tag: FmTag!, fromDevice deviceId: String!) {
+         let type = "text/plain".data(using: .ascii)
+         let record = FmNdefRecord.init(tnf: Int16(kTNFMimeMedia), andType: type, andId: nil, andPayload: "Hello World!".data(using: .ascii))
+         let message = FmNdefMessage.init(ndefRecords: [record!])
+         tag.writeNdef(message) { (success) in
+           if (success) {
+             print("Tag written successfully")
+           }
+         }
+     }
+  
+ ```
+ 
+## Find UHF RFID tags
+ 
+ For FloJack Gen 2 device only.
+ Use the `rfidTagsToFind` parameter on the [FmConfiguration](#fmconfiguration) object to only target specific tags.
+ You must initialize a new [FmConfiguration](#fmconfiguration) and call the `setConfiguration` method on the 
+ [FmSessionManager](#FmSessionManager) object.
+ 
+ ```objective_c
+      
+      FmConfiguration *config = [[FmConfiguration alloc] init];
+      config.rfidTagsToFind  = [[NSArray alloc] initWithObjects:@"1ABE1C0DE00000000000001B", nil];
+      [self.flomioSDK setConfiguration:config];
+  
+  ```
+  
+  ```swift
+     
+     let config = FmConfiguration.init()
+     config.rfidTagsToFind = ["1ABE1C0DE00000000000001B"]
+     self.flomioSDK.configuration = config
+   
+  ```
 
 # Classes and Methods
 
@@ -260,6 +381,7 @@ transmitPower | [TransmitPower](#transmitpower) | Control the power of the NFC p
 allowMulticonnect | Boolean |  Control whether multiple FloBLE devices can connect simultaneously.
 specificDeviceUid | String | Use the device id from back of device (or deviceId property) to only connect to a certain bluetooth reader. This is only for use when 'Allow Multiconnect' = @0.
 isCeMode | Boolean | Activates Card Emulation mode on FloBLE Plus
+rfidTagsToFind | Array | Array of strings to indicate the identifiers of the RFID tags you want to target with your uGrokit UHF RFID reader.
 
 **Note:** Booleans listed are NSNumber initialized with Booleans. Use @YES/@No in Objective-C and true/false in Swift
 
@@ -314,7 +436,7 @@ Represents a NDEF (NFC Data Exchange Format) record as defined by the NDEF speci
 | kFlojackMsr | Number | `2` | FloJack MSR |
 | kFloBleEmv | Number | `3` | FloBLE EMV |
 | kFloBlePlus | Number | `4` | FloBLE Plus |
-| uGrokit | Number | `5` | uGrokit |
+| uGrokit | Number | `5` | uGrokit / Flojack Gen 2 |
 
 ## PowerOperation
  `enum`

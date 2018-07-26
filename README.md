@@ -31,8 +31,10 @@ You can now see the docs at http://localhost:4567.
 
 To deploy to the active site
 
-Commit your changes to the markdown source: git commit -a -m "Update index.md"
-Push the markdown source changes to Github: git push
+Commit your changes to the markdown source: 
+`git commit -a -m "Update index.md"`
+Push the markdown source changes to Github: 
+`git push`
 ```shell 
 # to deploy to active site
 ./deploy.sh

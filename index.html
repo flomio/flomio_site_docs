@@ -192,7 +192,10 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 <h2 id="initialize-the-flomio-sdk">Initialize the Flomio SDK</h2>
 
-<p>See <a href="#fmconfiguration">FmConfiguration</a> for more information on the configuration.</p>
+<p>You should only initialize the SDK once per session. This should be called when you want to use your reader,
+after that you should use the <code class="prettyprint">startReaders</code> and <code class="prettyprint">stopReaders</code> methods on <a href="#fmsessionmanager">FmSessionManager</a> to
+control the readers.
+See <a href="#fmconfiguration">FmConfiguration</a> for more information on the configuration.</p>
 <pre class="highlight objective_c"><code>    <span class="o">------------------------------------------</span>
     <span class="c1">// in YourViewController.h, add this to viewDidLoad
 </span>    <span class="cp">#import &lt;FlomioSDK/FlomioSDK.h&gt;
@@ -253,15 +256,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <p>See <a href="#fmsessionmanagerdelegate">FmSessionManagerDelegate Methods</a> for more information on the delegate methods.</p>
 <pre class="highlight objective_c"><code>
     <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
-        <span class="p">[</span><span class="n">tag</span> <span class="nf">readNdef</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">FmNdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">FmNdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">url</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
-                        <span class="c1">// if there is a URL present in your tag, it will be here
-</span>                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}];</span>
+
     <span class="p">}</span>
 
     <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didReceiveReaderError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span> <span class="p">{</span>
@@ -281,15 +276,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 
 </code></pre><pre class="highlight swift"><code>
     <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">tag</span><span class="o">.</span><span class="n">readNdef</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
-            <span class="k">guard</span> <span class="k">let</span> <span class="nv">ndefRecords</span> <span class="o">=</span> <span class="n">ndefMessage</span><span class="p">?</span><span class="o">.</span><span class="n">ndefRecords</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
-            <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
-               <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
-                   <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
-                   <span class="c1">// if there is a URL present in your tag, it will be here</span>
-               <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+
     <span class="p">}</span>
 
     <span class="kd">func</span> <span class="nf">didChangeStatus</span><span class="p">(</span><span class="n">_</span> <span class="nv">deviceUid</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">with</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">FmConfiguration</span><span class="o">!</span><span class="p">,</span> <span class="n">andBatteryLevel</span> <span class="nv">batteryLevel</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="o">!</span><span class="p">,</span> <span class="n">andCommunicationStatus</span> <span class="nv">communicationStatus</span><span class="p">:</span> <span class="kt">CommunicationStatus</span><span class="p">,</span> <span class="n">withFirmwareRevision</span> <span class="nv">firmwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">,</span> <span class="n">withHardwareRevision</span> <span class="nv">hardwareRev</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
@@ -307,6 +294,116 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
     <span class="kd">func</span> <span class="nf">didReceiveReaderError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="p">}</span>
+</code></pre>
+<h2 id="reading-tags">Reading Tags</h2>
+
+<p>In the <code class="prettyprint">didFindTagFromDevice</code> callback, call the <code class="prettyprint">readNdef</code> method on the <a href="#fmtag">FmTag</a> object 
+to read NDEF formatted data from your tag. Within the completion handler, iterate through the <a href="#fmndefrecord">FmNdefRecord</a>s
+in the <a href="#fmndefmessage">FmNdefMessage</a> to see the payload present in your tag. If there is 
+a URL, our SDK provides a convenience parameter with the URL as a string.</p>
+<pre class="highlight objective_c"><code>
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">tag</span> <span class="nf">readNdef</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">FmNdefMessage</span> <span class="o">*</span><span class="n">ndef</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">FmNdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="k">in</span> <span class="n">ndef</span><span class="p">.</span><span class="n">ndefRecords</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">record</span><span class="p">.</span><span class="n">url</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+                        <span class="c1">// if there is a URL present in your tag, it will be here
+</span>                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}];</span>
+    <span class="p">}</span>
+
+</code></pre><pre class="highlight swift"><code>
+    <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">tag</span><span class="o">.</span><span class="n">readNdef</span> <span class="p">{</span> <span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="k">in</span>
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">ndefRecords</span> <span class="o">=</span> <span class="n">ndefMessage</span><span class="p">?</span><span class="o">.</span><span class="n">ndefRecords</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+            <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
+               <span class="k">for</span> <span class="k">case</span> <span class="k">let</span> <span class="nv">record</span> <span class="k">as</span> <span class="kt">FmNdefRecord</span> <span class="k">in</span> <span class="n">ndefRecords</span> <span class="p">{</span>
+                   <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+                   <span class="c1">// if there is a URL present in your tag, it will be here</span>
+               <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+</code></pre>
+<h2 id="writing-to-tags">Writing to Tags</h2>
+
+<h3 id="writing-a-web-address-to-tags">Writing a Web Address to Tags</h3>
+
+<p>In the <code class="prettyprint">didFindTagFromDevice</code> callback, initialize a <a href="#fmndefmessage">FmNdefMessage</a> with the <code class="prettyprint">createURIWithString</code> method and use it as a parameter on <code class="prettyprint">writeNdef</code> method
+ on the <a href="#fmtag">FmTag</a> object to begin writing. The completion handler will indicate whether
+ your operation was successful. </p>
+<pre class="highlight objective_c"><code>
+      <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
+          <span class="n">FmNdefMessage</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="n">FmNdefMessage</span> <span class="nf">createURIWithString</span><span class="p">:</span><span class="s">@"https://flomio.com"</span><span class="p">];</span>
+          <span class="p">[</span><span class="n">tag</span> <span class="nf">writeNdef</span><span class="p">:</span><span class="n">message</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Tag written successfully"</span><span class="p">);</span>
+              <span class="p">}</span>
+          <span class="p">}];</span>
+      <span class="p">}</span>
+
+</code></pre><pre class="highlight swift"><code>
+      <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">let</span> <span class="nv">ndefMessage</span> <span class="o">=</span> <span class="kt">FmNdefMessage</span><span class="o">.</span><span class="nf">createURI</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="s">"https://flomio.com"</span><span class="p">)</span>
+          <span class="n">tag</span><span class="o">.</span><span class="nf">writeNdef</span><span class="p">(</span><span class="n">ndefMessage</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="k">in</span>
+             <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+               <span class="nf">print</span><span class="p">(</span><span class="s">"Tag written successfully"</span><span class="p">)</span>
+             <span class="p">}</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+
+</code></pre>
+<h3 id="writing-text-data-to-tags">Writing Text Data to Tags</h3>
+
+<p>In the <code class="prettyprint">didFindTagFromDevice</code> callback, create one or more <a href="#fmndefrecord">FmNdefRecord</a>s
+and initialize a <a href="#fmndefmessage">FmNdefMessage</a> with them. Call the <code class="prettyprint">writeNdef</code> method
+ on the <a href="#fmtag">FmTag</a> object to begin writing. The completion handler will indicate whether
+ your operation was successful. </p>
+<pre class="highlight objective_c"><code>
+     <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">didFindTag</span><span class="p">:(</span><span class="n">FmTag</span> <span class="o">*</span><span class="p">)</span><span class="nv">tag</span> <span class="nf">fromDevice</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">deviceUid</span><span class="p">{</span>
+         <span class="n">NSData</span> <span class="o">*</span><span class="n">type</span> <span class="o">=</span> <span class="p">[</span><span class="s">@"text/plain"</span> <span class="nf">dataUsingEncoding</span><span class="p">:</span><span class="n">NSASCIIStringEncoding</span><span class="p">];</span>
+         <span class="n">NSData</span> <span class="o">*</span><span class="n">payload</span> <span class="o">=</span> <span class="p">[</span><span class="s">@"Hello World!"</span> <span class="nf">dataUsingEncoding</span><span class="p">:</span><span class="n">NSASCIIStringEncoding</span><span class="p">];</span>
+         <span class="n">FmNdefRecord</span> <span class="o">*</span><span class="n">record</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmNdefRecord</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTnf</span><span class="p">:</span><span class="n">kTNFMimeMedia</span> <span class="nf">andType</span><span class="p">:</span><span class="n">type</span> <span class="n">andId</span><span class="o">:</span><span class="nb">nil</span> <span class="n">andPayload</span><span class="o">:</span> <span class="n">payload</span><span class="p">];</span>
+         <span class="n">FmNdefMessage</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmNdefMessage</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithNdefRecords</span><span class="p">:@[</span><span class="n">record</span><span class="p">]];</span>
+         <span class="p">[</span><span class="n">tag</span> <span class="nf">writeNdef</span><span class="p">:</span><span class="n">message</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+             <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+               <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Tag written successfully"</span><span class="p">);</span>
+             <span class="p">}</span>
+         <span class="p">}];</span>
+     <span class="p">}</span>
+
+</code></pre><pre class="highlight swift"><code>
+     <span class="kd">func</span> <span class="nf">didFind</span><span class="p">(</span><span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt">FmTag</span><span class="o">!</span><span class="p">,</span> <span class="n">fromDevice</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">let</span> <span class="nv">type</span> <span class="o">=</span> <span class="s">"text/plain"</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">using</span><span class="p">:</span> <span class="o">.</span><span class="n">ascii</span><span class="p">)</span>
+         <span class="k">let</span> <span class="nv">record</span> <span class="o">=</span> <span class="kt">FmNdefRecord</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">tnf</span><span class="p">:</span> <span class="kt">Int16</span><span class="p">(</span><span class="n">kTNFMimeMedia</span><span class="p">),</span> <span class="nv">andType</span><span class="p">:</span> <span class="n">type</span><span class="p">,</span> <span class="nv">andId</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">andPayload</span><span class="p">:</span> <span class="s">"Hello World!"</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">using</span><span class="p">:</span> <span class="o">.</span><span class="n">ascii</span><span class="p">))</span>
+         <span class="k">let</span> <span class="nv">message</span> <span class="o">=</span> <span class="kt">FmNdefMessage</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">ndefRecords</span><span class="p">:</span> <span class="p">[</span><span class="n">record</span><span class="o">!</span><span class="p">])</span>
+         <span class="n">tag</span><span class="o">.</span><span class="nf">writeNdef</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="k">in</span>
+           <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+             <span class="nf">print</span><span class="p">(</span><span class="s">"Tag written successfully"</span><span class="p">)</span>
+           <span class="p">}</span>
+         <span class="p">}</span>
+     <span class="p">}</span>
+
+</code></pre>
+<h2 id="find-uhf-rfid-tags">Find UHF RFID tags</h2>
+
+<p>For FloJack Gen 2 device only.
+ Use the <code class="prettyprint">rfidTagsToFind</code> parameter on the <a href="#fmconfiguration">FmConfiguration</a> object to only target specific tags.
+ You must initialize a new <a href="#fmconfiguration">FmConfiguration</a> and call the <code class="prettyprint">setConfiguration</code> method on the 
+ <a href="#FmSessionManager">FmSessionManager</a> object.</p>
+<pre class="highlight objective_c"><code>
+      <span class="n">FmConfiguration</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="p">[[</span><span class="n">FmConfiguration</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+      <span class="n">config</span><span class="p">.</span><span class="n">rfidTagsToFind</span>  <span class="o">=</span> <span class="p">[[</span><span class="n">NSArray</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithObjects</span><span class="p">:</span><span class="s">@"1ABE1C0DE00000000000001B"</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+      <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">flomioSDK</span> <span class="nf">setConfiguration</span><span class="p">:</span><span class="n">config</span><span class="p">];</span>
+
+</code></pre><pre class="highlight swift"><code>
+     <span class="k">let</span> <span class="nv">config</span> <span class="o">=</span> <span class="kt">FmConfiguration</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+     <span class="n">config</span><span class="o">.</span><span class="n">rfidTagsToFind</span> <span class="o">=</span> <span class="p">[</span><span class="s">"1ABE1C0DE00000000000001B"</span><span class="p">]</span>
+     <span class="k">self</span><span class="o">.</span><span class="n">flomioSDK</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">config</span>
+
 </code></pre>
 <h1 id="classes-and-methods">Classes and Methods</h1>
 
@@ -432,6 +529,11 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>isCeMode</td>
 <td>Boolean</td>
 <td>Activates Card Emulation mode on FloBLE Plus</td>
+</tr>
+<tr>
+<td>rfidTagsToFind</td>
+<td>Array</td>
+<td>Array of strings to indicate the identifiers of the RFID tags you want to target with your uGrokit UHF RFID reader.</td>
 </tr>
 </tbody></table>
 
@@ -588,7 +690,7 @@ application name under TARGET. <code class="prettyprint">In Targets -&gt; YourAp
 <td>uGrokit</td>
 <td>Number</td>
 <td><code class="prettyprint">5</code></td>
-<td>uGrokit</td>
+<td>uGrokit / Flojack Gen 2</td>
 </tr>
 </tbody></table>
 

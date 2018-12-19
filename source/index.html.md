@@ -32,12 +32,12 @@ Our Flomio SDK consists of native libraries for Android and iOS that let you col
 To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encounter during your integration.
 
 ## Install Flomio Test app
-You can now register to [download the Flomio Test app](https://flomio-mw.herokuapp.com/) via TestFlight. Once registered, you'll receive an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
+You can now register to [download the Flomio Test app](https://testflight.apple.com/join/k0bjXGhH) via TestFlight. Once registered, you'll receive an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
 
 + FloJack BZR
 + FloJack MSR
 + FloJack Gen2
-+ FloBLE EMV
++ FloBLE Noir
 + FloBLE Plus
 
 You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio modulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. 
@@ -556,7 +556,8 @@ You want to create your IFTTT Applet using Maker Webhooks to trigger your event.
 
 Go to [IFTTT Create](https://ifttt.com/create). Click "+this", search 'Maker Webhooks' and select it. Select 'Receive a web request' and name your event to, for example, 'tag_scanned'.
 
-Side note (optional): For more precise control, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. 
+Side note (optional): For more precise control, with a FloBLE Plus or FloBLE Noir, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. 
+This feature is not available when using native NFC on iOS as Apple do not allow access to Tag Uids.
 
 Now click '+that', we will use iOS Calendar as an example here but you can use what you want. Click 'create a calendar event'. Now configure your event to show the details of the tag scan. Type 'Now' into start time, click 'create' and 'finish'.   
 

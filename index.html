@@ -135,13 +135,13 @@
 
 <h2 id="install-flomio-test-app">Install Flomio Test app</h2>
 
-<p>You can now register to <a href="https://flomio-mw.herokuapp.com/">download the Flomio Test app</a> via TestFlight. Once registered, you&rsquo;ll receive an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:</p>
+<p>You can now register to <a href="https://testflight.apple.com/join/k0bjXGhH">download the Flomio Test app</a> via TestFlight. Once registered, you&rsquo;ll receive an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:</p>
 
 <ul>
 <li>FloJack BZR</li>
 <li>FloJack MSR</li>
 <li>FloJack Gen2</li>
-<li>FloBLE EMV</li>
+<li>FloBLE Noir</li>
 <li>FloBLE Plus</li>
 </ul>
 
@@ -895,7 +895,8 @@ and initialize a <a href="#fmndefmessage">FmNdefMessage</a> with them. Call the 
 
 <p>Go to <a href="https://ifttt.com/create">IFTTT Create</a>. Click &ldquo;+this&rdquo;, search &#39;Maker Webhooks&rsquo; and select it. Select &#39;Receive a web request&rsquo; and name your event to, for example, &#39;tag_scanned&rsquo;.</p>
 
-<p>Side note (optional): For more precise control, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. </p>
+<p>Side note (optional): For more precise control, with a FloBLE Plus or FloBLE Noir, you can use the each tag Uid to trigger different events by setting the Event name to the Uid. 
+This feature is not available when using native NFC on iOS as Apple do not allow access to Tag Uids.</p>
 
 <p>Now click &rsquo;+that&rsquo;, we will use iOS Calendar as an example here but you can use what you want. Click &#39;create a calendar event&rsquo;. Now configure your event to show the details of the tag scan. Type &#39;Now&rsquo; into start time, click &#39;create&rsquo; and &#39;finish&rsquo;.   </p>
 

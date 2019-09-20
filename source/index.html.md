@@ -2,6 +2,7 @@
 title: API Reference
 
 language_tabs:
+  - javascript
   - objective_c
   - swift
   - java
@@ -15,21 +16,33 @@ search: true
 
 # Welcome
 
-Welcome to Flomio!! Get familiar with the Flomio products and explore their features in the [Flomio Shop](https://flomio.com/shop/)
+Welcome to Flomio! Get familiar with the Flomio products and explore their features in the [Flomio Shop](https://flomio.com/shop/)
 
-Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.
+Flomio builds hardware and software solutions in the proximity ID space. Flomio makes it easy to integrate our readers into your applications.
 
-You can use the Flomio SDK alongside any of Flomio's line of NFC, BLE, and UHF RFID readers.
-
-You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+As we migrate from native mobile SDKs, please refer to the [Javascript SDK](https://github.com/flomio/flomio-js-sdk-example) for the most up to date documentation.
 
 # Getting Started
 
-Flomio helps you build apps with NFC and RFID support so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to [ask the flomies](https://flomio.com/forums/forum/ask-the-flomies/).
+Flomio helps you build apps with NFC support so you can scan a tag to get a unique ID or read data. If after reading through this you still need help, feel free to [ask on the forums](https://flomio.com/forums/forum/ask-the-flomies/).
 
-Our Flomio SDK consists of native libraries for Android and iOS that let you collect NFC and RFID without having to deal with the stress of managing the low level interactions between the reader and tag. The Flomio SDK comes in 2 flavors, Basic and Pro. The Basic SDK checks for proper license on our cloud server so it requires connectivity to work. The Pro SDK works completely offline. More details in FAQ section below. 
+The Flomio SDK consists of a [Javascript SDK](https://github.com/flomio/flomio-js-sdk-example) that enables reading NFC tags connected via USB without having to deal with the stress of managing the low-level interactions between the reader and tag. The Flomio SDK checks for proper a reader license on our cloud server so it requires connectivity to work. 
 
-To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encounter during your integration.
+# Javascript Integration
+
+Visit the [flomio-js-sdk Github repoistory](https://github.com/flomio/flomio-js-sdk-example) for instructions to get started using the Javascript SDK within your project.
+
+```javascript 
+
+// Visit https://github.com/flomio/flomio-js-sdk-example for documentation of the Javascript SDK
+
+```
+
+# iOS Integration (Deprecated)
+
+Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project. 
+
+To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encounter during your integration. Our native libraries for Android and iOS and a cross-platform Javascript library are deprecated and not currently supported as we move to focus our efforts on the [Javascript SDK](https://github.com/flomio/flomio-js-sdk-example). 
 
 ## Install Flomio Test app
 You can now register to [download the Flomio Test app](https://testflight.apple.com/join/k0bjXGhH) via TestFlight. Once registered, you'll receive an email from the Apple TestFlight system directing you to install the TestFlight app and subsequently the Flomio Test app from within TestFlight. Once installed, the Flomio Test app will launch with a menu of our supported readers including:
@@ -40,7 +53,7 @@ You can now register to [download the Flomio Test app](https://testflight.apple.
 + FloBLE Noir
 + FloBLE Plus
 
-You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio modulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. 
+You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio modulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for the best results. This is done by plugging in the readers to USB power and observing charging RED led indicator goes off. At this point, the device is fully charged. 
 
 ## Download the Framework
 
@@ -60,10 +73,6 @@ Follow [these instructions](https://github.com/Carthage/Carthage#adding-framewor
 
 Add `github "https://github.com/flomio/flomio-sdk-ios"` to your Cartfile before running `carthage update`.
 You will still need to configure your project settings by following the steps in the [Configure Project Settings](#configure-project-settings) section.
-
-# iOS Integration
-
-Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project. 
 
 ## Configure Project Settings
 
@@ -339,7 +348,7 @@ and initialize a [FmNdefMessage](#fmndefmessage) with them. Call the `writeNdef`
    
   ```
 
-# Classes and Methods
+# Classes and Methods (Deprecated)
 
 ## FmSessionManagerDelegate
 
@@ -524,9 +533,9 @@ Please visit [the forums](https://flomio.com/forums/forum/ask-the-flomies/) for 
  
  credit: [Daniel Kennett](http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/)
 
-# Android Integration
+# Android Integration (Deprecated)
 
-# NFC Actions & IFTTT
+# NFC Actions & IFTTT (Deprecated)
 
 The recently revamped [NFC Actions app](https://appsto.re/ie/AQ-bN.i) is now available in the App Store. 🎉🍾🥂
 

@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;objective_c&quot;,&quot;swift&quot;,&quot;java&quot;]">
+  <body class="index" data-languages="[&quot;javascript&quot;,&quot;objective_c&quot;,&quot;swift&quot;,&quot;java&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,6 +101,7 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" alt="Logo" />
         <div class="lang-selector">
+              <a href="#" data-language-name="javascript">javascript</a>
               <a href="#" data-language-name="objective_c">objective_c</a>
               <a href="#" data-language-name="swift">swift</a>
               <a href="#" data-language-name="java">java</a>
@@ -117,21 +118,30 @@
       <div class="content">
         <h1 id="welcome">Welcome</h1>
 
-<p>Welcome to Flomio!! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
+<p>Welcome to Flomio! Get familiar with the Flomio products and explore their features in the <a href="https://flomio.com/shop/">Flomio Shop</a></p>
 
-<p>Flomio builds hardware and software solutions in the proximity ID space. With a focus on mobile platforms, Flomio makes it easy to integrate our readers into Apps for iOS and Android.</p>
+<p>Flomio builds hardware and software solutions in the proximity ID space. Flomio makes it easy to integrate our readers into your applications.</p>
 
-<p>You can use the Flomio SDK alongside any of Flomio&rsquo;s line of NFC, BLE, and UHF RFID readers.</p>
-
-<p>You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>As we migrate from native mobile SDKs, please refer to the <a href="https://github.com/flomio/flomio-js-sdk-example">Javascript SDK</a> for the most up to date documentation.</p>
 
 <h1 id="getting-started">Getting Started</h1>
 
-<p>Flomio helps you build apps with NFC and RFID support so you can scan a tag to get a unique ID or read data. If after reading through this you still need a help, feel free to <a href="https://flomio.com/forums/forum/ask-the-flomies/">ask the flomies</a>.</p>
+<p>Flomio helps you build apps with NFC support so you can scan a tag to get a unique ID or read data. If after reading through this you still need help, feel free to <a href="https://flomio.com/forums/forum/ask-the-flomies/">ask on the forums</a>.</p>
 
-<p>Our Flomio SDK consists of native libraries for Android and iOS that let you collect NFC and RFID without having to deal with the stress of managing the low level interactions between the reader and tag. The Flomio SDK comes in 2 flavors, Basic and Pro. The Basic SDK checks for proper license on our cloud server so it requires connectivity to work. The Pro SDK works completely offline. More details in FAQ section below. </p>
+<p>The Flomio SDK consists of a <a href="https://github.com/flomio/flomio-js-sdk-example">Javascript SDK</a> that enables reading NFC tags connected via USB without having to deal with the stress of managing the low-level interactions between the reader and tag. The Flomio SDK checks for proper a reader license on our cloud server so it requires connectivity to work. </p>
 
-<p>To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encounter during your integration.</p>
+<h1 id="javascript-integration">Javascript Integration</h1>
+
+<p>Visit the <a href="https://github.com/flomio/flomio-js-sdk-example">flomio-js-sdk Github repoistory</a> for instructions to get started using the Javascript SDK within your project.</p>
+<pre class="highlight javascript"><code>
+<span class="c1">// Visit https://github.com/flomio/flomio-js-sdk-example for documentation of the Javascript SDK</span>
+
+</code></pre>
+<h1 id="ios-integration-deprecated">iOS Integration (Deprecated)</h1>
+
+<p>Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project. </p>
+
+<p>To be sure your reader hardware is fully operational you should install the Flomio Test app via TestFlight. This will help resolve most issues you may encounter during your integration. Our native libraries for Android and iOS and a cross-platform Javascript library are deprecated and not currently supported as we move to focus our efforts on the <a href="https://github.com/flomio/flomio-js-sdk-example">Javascript SDK</a>. </p>
 
 <h2 id="install-flomio-test-app">Install Flomio Test app</h2>
 
@@ -145,7 +155,7 @@
 <li>FloBLE Plus</li>
 </ul>
 
-<p>You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio modulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for best results. This is done by plugging in the readers to USB power and observing charging RED led indicator go off. At this point the device is fully charged. </p>
+<p>You will need to plug in the FloJack readers into the audio jack port of your iOS device or power on the FloBLE readers before selecting the appropriate reader from the menu. In order for the FloJack readers to operate well, make sure the volume of your iOS device is raised to the max. This is because the data is exchanged via audio modulation so the higher signal strength, the better data is captured by the reader. Also, the readers should be fully charged for the best results. This is done by plugging in the readers to USB power and observing charging RED led indicator goes off. At this point, the device is fully charged. </p>
 
 <h2 id="download-the-framework">Download the Framework</h2>
 
@@ -165,10 +175,6 @@
 
 <p>Add <code class="prettyprint">github &quot;https://github.com/flomio/flomio-sdk-ios&quot;</code> to your Cartfile before running <code class="prettyprint">carthage update</code>.
 You will still need to configure your project settings by following the steps in the <a href="#configure-project-settings">Configure Project Settings</a> section.</p>
-
-<h1 id="ios-integration">iOS Integration</h1>
-
-<p>Our iOS libraries let you easily collect your customers/items tag information in your iOS app. Follow the instructions below to add the SDK to your project. </p>
 
 <h2 id="configure-project-settings">Configure Project Settings</h2>
 
@@ -405,7 +411,7 @@ and initialize a <a href="#fmndefmessage">FmNdefMessage</a> with them. Call the 
      <span class="k">self</span><span class="o">.</span><span class="n">flomioSDK</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">config</span>
 
 </code></pre>
-<h1 id="classes-and-methods">Classes and Methods</h1>
+<h1 id="classes-and-methods-deprecated">Classes and Methods (Deprecated)</h1>
 
 <h2 id="fmsessionmanagerdelegate">FmSessionManagerDelegate</h2>
 
@@ -863,9 +869,9 @@ and initialize a <a href="#fmndefmessage">FmNdefMessage</a> with them. Call the 
 </code></pre>
 <p>credit: <a href="http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/">Daniel Kennett</a></p>
 
-<h1 id="android-integration">Android Integration</h1>
+<h1 id="android-integration-deprecated">Android Integration (Deprecated)</h1>
 
-<h1 id="nfc-actions-amp-ifttt">NFC Actions &amp; IFTTT</h1>
+<h1 id="nfc-actions-amp-ifttt-deprecated">NFC Actions &amp; IFTTT (Deprecated)</h1>
 
 <p>The recently revamped <a href="https://appsto.re/ie/AQ-bN.i">NFC Actions app</a> is now available in the App Store. 🎉🍾🥂</p>
 
@@ -955,6 +961,7 @@ This feature is not available when using native NFC on iOS as Apple do not allow
       </div>
       <div class="dark-box">
           <div class="lang-selector">
+                <a href="#" data-language-name="javascript">javascript</a>
                 <a href="#" data-language-name="objective_c">objective_c</a>
                 <a href="#" data-language-name="swift">swift</a>
                 <a href="#" data-language-name="java">java</a>
